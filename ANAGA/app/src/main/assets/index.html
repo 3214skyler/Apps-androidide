@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no">
+<title>ANAGA BLACK STAR</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--p:#050505;--p2:#0b0b0d;--m:#ff00aa;--r:#ff39c8;--c:#aaa;--card:#111116;--b:#3a1235}
+body{background:radial-gradient(circle at top,#30002d,#090009 35%,#030303 75%);color:#fff;font-family:Arial,Helvetica,sans-serif;min-height:100vh}
+header{position:sticky;top:0;z-index:1000;background:rgba(5,5,5,.97);border-bottom:1px solid #42103b;padding:10px 15px;display:flex;align-items:center;justify-content:space-between}
+.logo-area{display:flex;align-items:center;gap:10px}.logo{width:58px;height:58px;object-fit:cover;border-radius:50%;box-shadow:0 0 8px #ff00aa,0 0 25px #ff00aa55}.logo-text strong{font-size:22px;letter-spacing:3px}.logo-text span{display:block;font-size:9px;letter-spacing:4px;color:var(--m);margin-top:3px}
+.menu-btn,nav button,.btn{cursor:pointer}.menu-btn{border:1px solid #5c1851;background:#120912;color:#fff;border-radius:10px;padding:10px 13px;font-size:13px;font-weight:bold}
+nav{display:flex;overflow-x:auto;gap:8px;padding:12px;background:#080608;border-bottom:1px solid #251025}nav button{flex-shrink:0;background:#120b13;border:1px solid #48113e;color:#ddd;padding:10px 17px;border-radius:20px;font-weight:bold}nav button.active{background:linear-gradient(135deg,#7c005f,#ff00aa);color:#fff}
+main{max-width:1000px;margin:auto;padding:18px 14px 80px}.section-title{margin:20px 0 14px;font-size:22px;border-left:4px solid var(--m);padding-left:10px}.section-title span{color:var(--m)}
+.hero{min-height:220px;display:flex;align-items:center;padding:28px;border-radius:20px;background:linear-gradient(100deg,#000f,#500041bf,#000e);border:1px solid #58104d;box-shadow:0 0 30px #ff00aa1f}.hero h1{font-size:35px;letter-spacing:4px}.hero h1 span{color:var(--m)}.hero p{color:#ccc;margin-top:10px;max-width:550px;line-height:1.5}.neon-line{width:100px;height:3px;background:var(--m);margin:14px 0;box-shadow:0 0 12px var(--m)}
+.search{margin:20px 0}.search input{width:100%;padding:15px;background:#0c0a0d;border:1px solid #4a1741;border-radius:12px;color:#fff;font-size:15px;outline:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}.card{background:linear-gradient(160deg,#151017,#09090b);border:1px solid #35152f;border-radius:15px;overflow:hidden;box-shadow:0 5px 20px #0008}.card-cover{width:100%;height:210px;object-fit:cover;background:#23001e}.card-body{padding:12px}.card h3{font-size:16px;margin-bottom:6px}.type{color:var(--m);font-size:11px;font-weight:bold}.card p{color:#999;font-size:12px;margin-top:7px}
+.btn{border:0;border-radius:10px;padding:12px 16px;font-weight:bold}.btn-primary{color:#fff;background:linear-gradient(135deg,#72005a,#ff00aa);box-shadow:0 0 15px #ff00aa40}.btn-dark{background:#151017;border:1px solid #42133a;color:#fff}.btn-danger{background:#4d001f;color:#fff;border:1px solid #97003d}.btn-small{padding:8px 11px;font-size:11px}
+.panel{background:#0d0b0f;border:1px solid #35152f;border-radius:16px;padding:18px;margin-bottom:18px}.panel h2{color:var(--m);margin-bottom:15px}
+label{display:block;color:#bbb;font-size:13px;margin:12px 0 6px}input,textarea,select{width:100%;background:#080709;color:#fff;border:1px solid #42153a;border-radius:10px;padding:12px;outline:none}textarea{min-height:100px;resize:vertical}
+.auth-container{max-width:500px;margin:20px auto}.auth-card{background:linear-gradient(145deg,#130c13,#080708);border:1px solid #681458;border-radius:20px;padding:25px}.auth-logo{text-align:center;margin:20px 0}.auth-logo strong{display:block;font-size:30px;letter-spacing:5px}.auth-logo span{color:var(--m);font-size:11px;letter-spacing:4px}.auth-card h2{text-align:center;margin-bottom:20px}.auth-card .btn{width:100%;margin-top:15px}.auth-switch{text-align:center;margin-top:20px;color:#888;font-size:13px}.auth-switch button{border:0;background:none;color:var(--m);font-weight:bold}
+.user-box{text-align:center;padding:10px 0 20px}.user-avatar{width:70px;height:70px;border-radius:50%;margin:auto;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#72005a,#ff00aa);font-size:28px;font-weight:bold}.user-email{color:#aaa;margin-top:10px;font-size:13px}
+.reader{background:#080709;border:1px solid #32132d;border-radius:15px;overflow:hidden}.reader-header{padding:16px;border-bottom:1px solid #32132d;background:#100b11}.reader-content{min-height:500px;padding:18px;color:#ddd;line-height:1.8;font-size:17px}.reader-content h1{margin-bottom:18px}.chapter-list{display:flex;flex-direction:column;gap:8px;margin-top:15px}.chapter-item{background:#100b11;border:1px solid #35152f;border-radius:10px;padding:12px;display:flex;align-items:center;justify-content:space-between;gap:10px}.chapter-item strong{color:#fff}.chapter-item span{color:#888;font-size:12px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}.stat{text-align:center;background:#100b11;border:1px solid #3c1535;border-radius:12px;padding:16px}.stat strong{display:block;font-size:25px;color:var(--m)}.stat span{color:#888;font-size:11px}
+.download-overlay{position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.82);display:none;align-items:center;justify-content:center;padding:20px}.download-card{width:min(460px,100%);background:#100b11;border:1px solid #ff00aa;border-radius:16px;padding:20px;box-shadow:0 10px 40px #000}.download-card h3{color:#ff00aa;margin-bottom:12px}.download-status{color:#fff;font-size:13px;line-height:1.5}.download-detail{color:#aaa;font-size:12px;margin-top:7px}.download-track{height:9px;background:#261324;border-radius:10px;overflow:hidden;margin-top:14px}.download-track i{display:block;width:0;height:100%;background:#ff00aa;transition:width .15s}.download-percent{text-align:right;color:#ff00aa;font-weight:bold;font-size:12px;margin-top:7px}.progress-box{display:none;margin-top:12px}.progress-track{height:7px;background:#21101e;border-radius:10px;overflow:hidden}.progress-bar{width:0;height:7px;background:var(--m);transition:.2s}.progress-text{color:#888;font-size:11px;margin-top:6px}
+.file-box{border:1px dashed #71105e;padding:15px;border-radius:10px;background:#100911}.cover-preview{width:130px;height:180px;object-fit:cover;display:none;border-radius:8px;border:1px solid var(--m);margin-top:10px}
+.page-builder{margin-top:12px}.page-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:12px}.page-slot{background:#100b11;border:1px solid #42153a;border-radius:12px;padding:10px;min-height:190px}.page-slot.ok{border-color:var(--m);box-shadow:0 0 10px #ff00aa22}.page-slot .num{color:var(--m);font-weight:bold;font-size:12px;margin-bottom:8px}.page-preview{width:100%;height:130px;object-fit:contain;background:#050505;border-radius:7px;margin:7px 0}.page-status{font-size:11px;color:#777;word-break:break-word}.reader-controls{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;padding:12px;border-top:1px solid #32132d;background:#100b11}.reader-controls button{min-width:95px}.reader-progress{width:100%;height:5px;background:#251025}.reader-progress i{display:block;width:0;height:5px;background:var(--m);transition:.2s}.page-counter{text-align:center;color:#aaa;font-size:12px;width:100%}
+.manga-page{width:100%;background:#000;margin:0 auto 8px}.manga-page img{width:100%;display:block;height:auto}
+.offline-badge{display:inline-block;border:1px solid #5c1851;border-radius:20px;padding:5px 9px;color:var(--m);font-size:10px;margin-top:7px}.empty{text-align:center;padding:40px 10px;color:#666}.loading{text-align:center;padding:40px 10px;color:var(--m)}.offline-download{position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.82);display:none;align-items:center;justify-content:center;padding:20px}.offline-download.open{display:flex}.offline-download-box{width:min(430px,94vw);background:#100b11;border:1px solid #ff00aa;border-radius:16px;padding:22px;box-shadow:0 0 30px #ff00aa33}.offline-download-title{font-weight:bold;font-size:18px;color:#fff;margin-bottom:8px}.offline-download-detail{color:#aaa;font-size:13px;min-height:38px}.offline-download-track{height:10px;background:#261321;border-radius:20px;overflow:hidden;margin-top:15px}.offline-download-bar{height:100%;width:0;background:var(--m);transition:width .15s}.offline-download-percent{text-align:center;color:#fff;font-weight:bold;font-size:14px;margin-top:8px}.offline-download-status{color:#888;font-size:11px;margin-top:8px;text-align:center}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#190d18;border:1px solid var(--m);color:#fff;padding:13px 20px;border-radius:10px;display:none;z-index:9000;max-width:90%;text-align:center}
+footer{text-align:center;padding:35px 15px;border-top:1px solid #271025;color:#666;font-size:12px}footer strong{color:var(--m);letter-spacing:3px}.hidden{display:none!important}.admin-only{display:none}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+
+.admin-modal{position:fixed;inset:0;z-index:200000;background:rgba(0,0,0,.82);display:none;align-items:center;justify-content:center;padding:18px}.admin-modal.open{display:flex}.admin-modal-card{width:min(620px,100%);max-height:92vh;overflow:auto;background:#0d0b0f;border:1px solid #ff00aa;border-radius:18px;padding:20px;box-shadow:0 15px 60px #000}.admin-modal-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.admin-modal-head h3{color:var(--m)}.admin-modal-close{background:#151017;border:1px solid #42133a;color:#fff;border-radius:9px;padding:8px 11px;cursor:pointer}.admin-edit-cover{display:flex;gap:15px;align-items:flex-start;margin-top:8px}.admin-edit-cover img{width:100px;height:140px;object-fit:cover;border-radius:9px;border:1px solid #57154b;background:#050505}.admin-edit-cover-info{flex:1}.admin-edit-status{font-size:11px;color:#888;margin-top:7px}.admin-modal-actions{display:flex;gap:8px;margin-top:18px}.admin-modal-actions .btn{flex:1}
+
+.admin-layout{display:grid;grid-template-columns:190px 1fr;gap:14px;align-items:start}.admin-menu{position:sticky;top:85px;background:#0d0b0f;border:1px solid #35152f;border-radius:16px;padding:10px}.admin-menu-title{color:#888;font-size:10px;font-weight:bold;letter-spacing:1.5px;padding:9px 10px}.admin-op{width:100%;border:1px solid transparent;background:#100b11;color:#ccc;border-radius:10px;padding:11px 10px;text-align:left;font-weight:bold;font-size:12px;margin-bottom:6px;cursor:pointer}.admin-op:hover,.admin-op.active{background:linear-gradient(135deg,#2b0827,#6e0056);border-color:#7d126d;color:#fff}.admin-content{min-width:0}.admin-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.admin-summary div{background:#100b11;border:1px solid #35152f;border-radius:10px;padding:12px}.admin-summary strong{display:block;color:var(--m);font-size:18px}.admin-summary span{display:block;color:#888;font-size:10px;margin-top:3px}.admin-filter-row{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.admin-filter-row .active{border-color:var(--m);color:var(--m)}.admin-row{background:#100b11;border:1px solid #35152f;border-radius:11px;padding:12px;margin-top:9px}.admin-row-main{display:flex;justify-content:space-between;align-items:center;gap:10px}.admin-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}.admin-help{color:#888;font-size:12px;line-height:1.5;margin-bottom:10px}.page-admin-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:9px;margin-top:15px}.page-admin-card{background:#100b11;border:1px solid #35152f;border-radius:10px;padding:8px}.page-admin-card img{width:100%;height:150px;object-fit:contain;background:#050505;border-radius:6px}.page-admin-card small{display:block;color:#aaa;margin-top:6px;font-size:10px}.admin-novel{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#100b11;border:1px solid #35152f;border-radius:10px;padding:12px;margin-top:9px}@media(max-width:700px){.admin-layout{grid-template-columns:1fr}.admin-menu{position:sticky;top:79px;z-index:20;display:flex;overflow-x:auto;gap:6px;padding:8px}.admin-menu-title{display:none}.admin-op{width:auto;min-width:max-content;margin:0;padding:10px 12px;text-align:center}.admin-summary{grid-template-columns:1fr 1fr 1fr}.admin-row-main{align-items:flex-start;flex-direction:column}.admin-actions{width:100%}.admin-actions .btn{flex:1}}
+
+@media(max-width:600px){.hero h1{font-size:27px}.reader-content{padding:8px;font-size:16px}.stats{grid-template-columns:1fr 1fr 1fr}.two{grid-template-columns:1fr}.page-grid{grid-template-columns:repeat(2,1fr)}.chapter-item{align-items:stretch}.chapter-item button{white-space:nowrap}}
+
+.admin-users-search{display:flex;gap:8px;align-items:center}.admin-user{display:flex;justify-content:space-between;align-items:center;gap:12px}.admin-user-main{min-width:0}.admin-user-main strong{display:block;overflow-wrap:anywhere}.admin-user-main span{color:#888;font-size:11px}.admin-user-badge{white-space:nowrap}.admin-config-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}@media(max-width:700px){.admin-config-grid{grid-template-columns:1fr}.admin-user{align-items:flex-start;flex-direction:column}}
+#mangaScreen{position:fixed;inset:0;z-index:99998;background:#050505;color:#fff;display:flex;flex-direction:column;width:100vw;height:100vh;height:100dvh;overflow:hidden;font-family:Arial,Helvetica,sans-serif;touch-action:none}
+.manga-topbar{height:54px;min-height:54px;background:rgba(8,6,8,.98);border-bottom:1px solid #ff00aa;display:flex;align-items:center;gap:9px;padding:0 9px;box-shadow:0 0 18px #ff00aa44;z-index:20;transition:transform .2s}.manga-ui-hidden .manga-topbar{transform:translateY(-100%)}
+.manga-top-btn{border:1px solid #ff00aa;background:#160b15;color:#fff;border-radius:9px;padding:8px 11px;font-weight:700;cursor:pointer;white-space:nowrap}.manga-title-wrap{flex:1;min-width:0;text-align:center;display:flex;flex-direction:column;overflow:hidden}.manga-title-wrap strong{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.manga-title-wrap span{font-size:11px;color:#aaa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}.manga-actions{display:flex;gap:6px}
+.manga-viewport{position:relative;flex:1;min-height:0;overflow:auto;background:#050505;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;scrollbar-width:none;touch-action:pan-y}.manga-viewport::-webkit-scrollbar{display:none}.manga-viewport.modo-horizontal{overflow-x:auto;overflow-y:hidden;display:block;scroll-snap-type:x mandatory;touch-action:pan-x;direction:ltr}.manga-page-full{width:100%;display:flex;justify-content:center;background:transparent;scroll-margin-top:0;min-height:100%}.manga-image-vertical{display:block;user-select:none;-webkit-user-drag:none;object-fit:contain}.manga-image-vertical.fit-largura{width:100%;height:auto;max-width:100%}.manga-image-vertical.fit-altura{height:100%;width:auto;max-width:100%}.manga-image-vertical.fit-original{width:auto;height:auto;max-width:none;max-height:none}.manga-horizontal-stage{height:100%;width:max-content;min-width:100%;display:flex;align-items:center;gap:0;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;direction:ltr}.manga-spread{height:100%;width:100vw;flex:0 0 100vw;display:flex;align-items:center;justify-content:center;gap:0;scroll-snap-align:center;scroll-snap-stop:always;overflow:hidden}.manga-image-horizontal{display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;user-select:none;-webkit-user-drag:none}.manga-spread.dupla{gap:2px}.manga-spread.dupla .manga-image-horizontal{width:50%;max-width:50%;max-height:100%;object-fit:contain}.manga-image-horizontal.fit-largura{max-width:100%;width:auto;height:auto}.manga-image-horizontal.fit-altura{height:100%;width:auto;max-height:100%}.manga-image-horizontal.fit-original{width:auto;height:auto;max-width:none;max-height:none}.manga-image-error{background:#180e18;border:1px solid #ff00aa;min-width:80px;min-height:80px}
+.manga-loading{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:4;background:#120b12;border:1px solid #ff00aa;border-radius:10px;padding:12px 16px;color:#fff}.manga-progress{height:3px;background:#2a1726;border-radius:4px;overflow:hidden;margin-bottom:6px}.manga-progress i{display:block;height:100%;width:0;background:#ff00aa;transition:.15s}.manga-bottombar{background:rgba(8,6,8,.98);border-top:1px solid #ff00aa;padding:6px 9px 8px;box-shadow:0 0 18px #ff00aa44;z-index:20;transition:transform .2s}.manga-ui-hidden .manga-bottombar{transform:translateY(100%)}
+.manga-slider-row{display:flex;align-items:center;gap:7px}.manga-slider-row button{width:40px;height:32px;border:1px solid #4b1742;background:#151015;color:#fff;border-radius:8px;font-weight:bold}.manga-slider-row button:disabled{opacity:.35}.manga-slider-row input{flex:1;accent-color:#ff00aa}.manga-controls{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;margin-top:5px}.manga-controls button,.manga-controls span{border:1px solid #3d1837;background:#120d12;color:#fff;border-radius:8px;padding:7px 9px;font-weight:700;font-size:11px}.manga-controls span{border:0;color:#bbb}.manga-settings{position:absolute;right:8px;top:62px;width:min(390px,calc(100vw - 16px));max-height:calc(100% - 125px);overflow:auto;background:rgba(12,9,12,.98);border:1px solid #ff00aa;border-radius:13px;padding:13px;z-index:30;box-shadow:0 12px 35px #000;transform:translateX(120%);transition:.2s}.manga-settings.open{transform:translateX(0)}.manga-settings-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;color:#ff00aa}.manga-settings-head button{background:none;border:0;color:#fff;font-size:18px}.manga-setting-group{padding:10px 0;border-top:1px solid #281526}.manga-setting-group>span,.manga-setting-group>label{display:block;color:#aaa;font-size:11px;margin-bottom:7px}.manga-setting-row{display:flex;gap:6px;flex-wrap:wrap}.manga-setting-row button{flex:1;min-width:100px;background:#181018;color:#fff;border:1px solid #48203f;border-radius:8px;padding:9px 7px;font-size:10px;font-weight:700}.manga-setting-row button:active{border-color:#ff00aa}.manga-setting-group input{width:100%;accent-color:#ff00aa}.manga-extra{margin-top:8px}.manga-extra button{min-width:0}.manga-ui-hidden .manga-settings{display:none}#mangaDimmer{position:absolute;inset:0;background:#000;pointer-events:none;z-index:5;opacity:0;transition:.1s}.manga-ui-hidden #mangaTapHint{opacity:.55}.manga-ui-hidden .manga-viewport{cursor:none}
+#mangaTapHint{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);padding:9px 13px;background:rgba(0,0,0,.7);border:1px solid #555;border-radius:20px;color:#aaa;font-size:11px;pointer-events:none;opacity:0;transition:opacity .2s;z-index:10}
+@media(max-width:700px){.manga-topbar{height:50px;min-height:50px;padding:0 6px}.manga-top-btn{padding:7px 8px;font-size:11px}.manga-title-wrap strong{font-size:12px}.manga-title-wrap span{font-size:9px}.manga-actions{gap:4px}.manga-actions .manga-top-btn:last-child{display:none}.manga-spread:has(.manga-image-horizontal:nth-child(2)) .manga-image-horizontal{width:50%;max-width:50%}.manga-settings{top:55px;max-height:calc(100% - 115px)}.manga-controls button{padding:7px 7px;font-size:10px}.manga-controls span{font-size:11px}.manga-bottombar{padding-bottom:calc(7px + env(safe-area-inset-bottom))}}
+</style>
+<meta name="anaga-platform" content="android-id-ready-v2"></head>
+<body>
+<header>
+<div class="logo-area"><img src="logo-anaga.jpeg" class="logo" alt="ANAGA"><div class="logo-text"><strong>ANAGA</strong><span>BLACK STAR</span></div></div>
+<button id="authMenuBtn" class="menu-btn" type="button">ENTRAR</button>
+</header>
+<nav>
+<button id="navInicio" class="active" onclick="mostrarPagina('inicio')">INÍCIO</button>
+<button onclick="filtrarTipo('MANGÁ')">MANGÁ</button>
+<button onclick="filtrarTipo('LIGHT NOVEL')">LIGHT NOVEL</button>
+<button onclick="mostrarPagina('biblioteca')">BIBLIOTECA</button>
+<button id="navAdmin" class="admin-only" onclick="mostrarPagina('admin')">ADMIN</button>
+</nav>
+
+<main>
+<section id="inicio">
+<div class="hero"><div><h1>ANAGA <span>BLACK STAR</span></h1><div class="neon-line"></div><p>O universo onde histórias ganham vida. Descobre novos mangás e light novels publicados pela ANAGA.</p></div></div>
+<div class="search"><input type="search" id="pesquisa" placeholder="Pesquisar mangá ou light novel..." oninput="pesquisar()"></div>
+<h2 class="section-title">Obras <span>Publicadas</span></h2><div id="listaObras" class="grid"></div>
+</section>
+
+<section id="biblioteca" class="hidden"><h2 class="section-title">Minha <span>Biblioteca</span></h2><div id="bibliotecaLista" class="grid"></div></section>
+
+<section id="auth" class="hidden"><div class="auth-container"><div class="auth-card"><button class="btn btn-dark" onclick="voltarInicio()">← Voltar</button><div class="auth-logo"><strong>ANAGA</strong><span>BLACK STAR</span></div>
+<div id="loginForm"><h2>Entrar</h2><label>E-mail</label><input id="loginEmail" type="email" placeholder="teu@email.com"><label>Senha</label><input id="loginSenha" type="password" placeholder="A tua senha"><button class="btn btn-primary" onclick="fazerLogin()">ENTRAR</button><div class="auth-switch">Ainda não tens conta? <button onclick="mostrarCriarConta()">Criar conta</button></div></div>
+<div id="criarContaForm" class="hidden"><h2>Criar conta</h2><label>Nome</label><input id="cadastroNome"><label>E-mail</label><input id="cadastroEmail" type="email"><label>Senha</label><input id="cadastroSenha" type="password"><label>Confirmar senha</label><input id="cadastroSenhaConfirmar" type="password"><button class="btn btn-primary" onclick="criarConta()">CRIAR CONTA</button><div class="auth-switch">Já tens uma conta? <button onclick="mostrarLogin()">Entrar</button></div></div>
+<div id="userForm" class="hidden"><div class="user-box"><div id="userAvatar" class="user-avatar">A</div><h2 id="userNome">Utilizador</h2><div id="userEmail" class="user-email"></div></div><button class="btn btn-dark" onclick="mostrarPagina('biblioteca')">📚 MINHA BIBLIOTECA</button><button class="btn btn-primary admin-only" onclick="mostrarPagina('admin')">⚙️ PAINEL ADMIN</button><button class="btn btn-danger" onclick="fazerLogout()">SAIR DA CONTA</button></div>
+</div></div></section>
+
+<section id="leitor" class="hidden"><button class="btn btn-dark" onclick="voltarInicio()">← Voltar</button><br><br><div class="reader"><div id="readerHeader" class="reader-header"></div><div id="readerContent" class="reader-content"></div></div></section>
+
+<section id="admin" class="hidden">
+<h2 class="section-title">Painel do <span>Desenvolvedor</span></h2>
+<div class="admin-layout">
+  <aside class="admin-menu">
+    <div class="admin-menu-title">⚙️ OPERAÇÕES</div>
+    <button class="admin-op active" data-admin-tab="dashboard" onclick="abrirAdminTab('dashboard')">📊 Dashboard</button>
+    <button class="admin-op" data-admin-tab="obras" onclick="abrirAdminTab('obras')">📚 Obras</button>
+    <button class="admin-op" data-admin-tab="publicar" onclick="abrirAdminTab('publicar')">➕ Publicar obra</button>
+    <button class="admin-op" data-admin-tab="capitulos" onclick="abrirAdminTab('capitulos')">📖 Capítulos</button>
+    <button class="admin-op" data-admin-tab="paginas" onclick="abrirAdminTab('paginas')">🖼️ Páginas Mangá</button>
+    <button class="admin-op" data-admin-tab="novel" onclick="abrirAdminTab('novel')">📦 Light Novel</button>
+    <button class="admin-op" data-admin-tab="usuarios" onclick="abrirAdminTab('usuarios')">👥 Utilizadores</button>
+    <button class="admin-op" data-admin-tab="config" onclick="abrirAdminTab('config')">⚙️ Configurações</button>
+  </aside>
+  <div class="admin-content">
+    <div id="adminTabDashboard" class="admin-tab">
+      <div class="stats"><div class="stat"><strong id="totalObras">0</strong><span>OBRAS</span></div><div class="stat"><strong id="totalMangas">0</strong><span>MANGÁS</span></div><div class="stat"><strong id="totalNovels">0</strong><span>LIGHT NOVELS</span></div></div>
+      <div class="panel"><h2>📊 Visão geral</h2><div id="adminResumo" class="admin-summary"></div></div>
+      <div class="panel"><h2>🕘 Obras recentes</h2><div id="adminRecentes"></div></div>
+    </div>
+
+    <div id="adminTabObras" class="admin-tab hidden">
+      <div class="panel"><h2>📚 Gestão de obras</h2><input id="adminPesquisaObras" type="search" placeholder="Pesquisar obra..." oninput="renderAdminObras()"><div class="admin-filter-row"><button class="btn btn-dark btn-small" onclick="definirFiltroAdmin('TODAS')">TODAS</button><button class="btn btn-dark btn-small" onclick="definirFiltroAdmin('MANGÁ')">MANGÁ</button><button class="btn btn-dark btn-small" onclick="definirFiltroAdmin('LIGHT NOVEL')">LIGHT NOVEL</button></div><div id="adminObras"></div></div>
+    </div>
+
+    <div id="adminTabPublicar" class="admin-tab hidden">
+      <div class="panel"><h2>➕ Publicar nova obra</h2>
+        <label>Título</label><input id="tituloObra" placeholder="Ex.: Black Star">
+        <label>Tipo</label><select id="tipoObra" onchange="atualizarTipoCapitulo()"><option>MANGÁ</option><option>LIGHT NOVEL</option></select>
+        <label>Autor</label><input id="autorObra">
+        <label>Gênero</label><input id="generoObra">
+        <label>Descrição</label><textarea id="descricaoObra"></textarea>
+        <label>Capa</label><div class="file-box"><input id="capaObra" type="file" accept="image/*" onchange="previewCapa(event)"><img id="capaPreview" class="cover-preview"></div>
+        <div id="progressoCapa" class="progress-box"><div class="progress-track"><div class="progress-bar"></div></div><div class="progress-text"></div></div><button class="btn btn-primary" style="width:100%;margin-top:15px" onclick="publicarObra()">PUBLICAR OBRA</button>
+      </div>
+    </div>
+
+    <div id="adminTabCapitulos" class="admin-tab hidden">
+      <div class="panel"><h2>📖 Adicionar capítulo</h2>
+        <label>Obra</label><select id="obraCapitulo" onchange="atualizarTipoCapitulo();renderAdminCapitulos()"></select>
+        <div class="two"><div><label>Número do capítulo</label><input id="numeroCapitulo" type="number" min="1"></div><div><label>Título</label><input id="tituloCapitulo" placeholder="Ex.: O começo"></div></div>
+        <div id="areaManga" class="page-builder"><div class="file-box"><strong>🖼️ Páginas do Mangá</strong><p style="color:#888;font-size:12px;margin:8px 0">Define primeiro a quantidade exata. Cada página terá o seu próprio campo.</p><div class="two"><div><label>Quantidade exata</label><input id="quantidadePaginas" type="number" min="1" max="500" placeholder="Ex.: 24"></div><div style="display:flex;align-items:end"><button class="btn btn-dark" style="width:100%" onclick="gerarSlotsPaginas()">CRIAR PÁGINAS</button></div></div><p id="contadorPaginas" style="color:#ff00aa;font-size:12px;margin-top:10px">0 / 0 páginas carregadas</p></div><div id="pageGrid" class="page-grid"></div></div>
+        <div id="areaLightNovel" class="file-box" style="margin-top:15px;display:none"><strong>📦 Arquivo da Light Novel</strong><p style="color:#888;font-size:12px;margin:8px 0">ZIP contendo o HTML e os assets.</p><input id="arquivoNovel" type="file" accept=".zip"><p id="nomeNovel" style="color:#ff00aa;font-size:12px;margin-top:8px"></p></div>
+        <label>Conteúdo opcional</label><textarea id="conteudoCapitulo" placeholder="Conteúdo opcional..."></textarea>
+        <div id="progressoCapitulo" class="progress-box"><div class="progress-track"><div class="progress-bar"></div></div><div class="progress-text"></div></div><button class="btn btn-primary" style="width:100%;margin-top:15px" onclick="adicionarCapitulo()">ADICIONAR CAPÍTULO</button>
+      </div>
+      <div class="panel"><h2>📚 Capítulos existentes</h2><div id="adminCapitulosLista"></div></div>
+    </div>
+
+    <div id="adminTabPaginas" class="admin-tab hidden">
+      <div class="panel"><h2>🖼️ Páginas do Mangá</h2><p class="admin-help">Escolhe uma obra e um capítulo para consultar, adicionar, substituir ou remover páginas.</p><label>Obra</label><select id="obraPaginas" onchange="carregarAdminPaginas()"></select><label>Capítulo</label><select id="capituloPaginas" onchange="carregarAdminPaginas()"></select><div class="admin-filter-row"><button class="btn btn-primary btn-small" onclick="abrirAdicionarPaginas()">➕ ADICIONAR PÁGINAS</button><button class="btn btn-dark btn-small" onclick="carregarAdminPaginas()">↻ ATUALIZAR</button></div><div id="adminPaginasLista" class="page-admin-list"></div></div>
+    </div>
+
+    <div id="adminTabNovel" class="admin-tab hidden">
+      <div class="panel"><h2>📦 Light Novel</h2><p class="admin-help">Seleciona uma obra para gerir os capítulos ZIP da Light Novel.</p><label>Obra</label><select id="obraNovelAdmin" onchange="carregarAdminNovels()"></select><div id="adminNovelsLista"></div></div>
+    </div>
+
+    <div id="adminTabUsuarios" class="admin-tab hidden">
+      <div class="panel"><h2>👥 Utilizadores</h2><p class="admin-help">Consulta os perfis registados e verifica quais contas têm privilégios administrativos. Por segurança, esta área não expõe palavras-passe nem dados de autenticação sensíveis.</p><div class="admin-filter-row"><input id="adminPesquisaUsuarios" type="search" placeholder="Pesquisar por nome ou ID..." oninput="renderAdminUsuarios()"><button class="btn btn-dark btn-small" onclick="carregarAdminUsuarios()">↻ ATUALIZAR</button></div><div id="adminUsuariosLista"></div></div>
+    </div>
+
+    <div id="adminTabConfig" class="admin-tab hidden">
+      <div class="panel"><h2>⚙️ Configurações</h2><p class="admin-help">Ferramentas administrativas da aplicação. As alterações são locais, exceto quando indicado.</p>
+        <div class="admin-row"><div class="admin-row-main"><div><strong>ANAGA BLACK STAR</strong><br><span>Plataforma de Mangás e Light Novels</span></div><span class="type">v11</span></div></div>
+        <div class="admin-row"><strong>👤 Sessão atual</strong><p id="adminConfigSessao" class="admin-help" style="margin:7px 0 0"></p></div>
+        <div class="admin-row"><strong>💾 Dados offline</strong><p class="admin-help">Limpa apenas os dados guardados offline neste dispositivo. Isto não elimina obras do Supabase.</p><button class="btn btn-danger btn-small" onclick="limparDadosOfflineAdmin()">🗑️ LIMPAR OFFLINE</button></div>
+        <div class="admin-row"><strong>🔄 Sincronização</strong><p class="admin-help">Recarrega as obras e atualiza o painel administrativo com os dados atuais do Supabase.</p><button class="btn btn-primary btn-small" onclick="sincronizarAdmin()">🔄 ATUALIZAR DADOS</button></div>
+        <div class="admin-row"><strong>ℹ️ Ambiente</strong><p id="adminConfigAmbiente" class="admin-help" style="margin:7px 0 0"></p></div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+</main>
+<footer><strong>ANAGA</strong><br><br>BLACK STAR<br><br>© 2026 ANAGA STUDIO</footer>
+
+<div id="adminCapModal" class="admin-modal" onclick="if(event.target===this)fecharEditarCapitulo()">
+  <div class="admin-modal-card">
+    <div class="admin-modal-head"><h3>✏️ Editar capítulo</h3><button class="admin-modal-close" type="button" onclick="fecharEditarCapitulo()">✕</button></div>
+    <input id="adminCapEditId" type="hidden"><input id="adminCapEditObraId" type="hidden">
+    <label>Número do capítulo</label><input id="adminCapEditNumero" type="number" min="1">
+    <label>Título</label><input id="adminCapEditTitulo">
+    <label>Conteúdo opcional</label><textarea id="adminCapEditConteudo"></textarea>
+    <div class="admin-modal-actions"><button class="btn btn-dark" type="button" onclick="fecharEditarCapitulo()">CANCELAR</button><button class="btn btn-primary" type="button" onclick="guardarEdicaoCapitulo()">💾 GUARDAR</button></div>
+  </div>
+</div>
+
+<div id="adminPaginasModal" class="admin-modal" onclick="if(event.target===this)fecharAdicionarPaginas()">
+  <div class="admin-modal-card">
+    <div class="admin-modal-head"><h3>🖼️ Adicionar páginas</h3><button class="admin-modal-close" type="button" onclick="fecharAdicionarPaginas()">✕</button></div>
+    <input id="adminPaginasObraId" type="hidden"><input id="adminPaginasCapId" type="hidden">
+    <p id="adminPaginasInfo" class="admin-help"></p>
+    <label>Selecionar imagens</label><input id="adminPaginasFiles" type="file" accept="image/*" multiple>
+    <div id="adminPaginasPreview" class="page-admin-list"></div>
+    <div id="progressoAdminPaginas" class="progress-box"><div class="progress-track"><div class="progress-bar"></div></div><div class="progress-text"></div></div>
+    <div class="admin-modal-actions"><button class="btn btn-dark" type="button" onclick="fecharAdicionarPaginas()">CANCELAR</button><button class="btn btn-primary" type="button" onclick="guardarNovasPaginas()">💾 ENVIAR PÁGINAS</button></div>
+  </div>
+</div>
+
+<div id="adminNovelModal" class="admin-modal" onclick="if(event.target===this)fecharSubstituirNovel()">
+  <div class="admin-modal-card">
+    <div class="admin-modal-head"><h3>📦 Substituir Light Novel</h3><button class="admin-modal-close" type="button" onclick="fecharSubstituirNovel()">✕</button></div>
+    <input id="adminNovelEditId" type="hidden"><input id="adminNovelEditObraId" type="hidden">
+    <p id="adminNovelInfo" class="admin-help"></p>
+    <label>Novo arquivo ZIP</label><input id="adminNovelFile" type="file" accept=".zip">
+    <div id="progressoAdminNovel" class="progress-box"><div class="progress-track"><div class="progress-bar"></div></div><div class="progress-text"></div></div>
+    <div class="admin-modal-actions"><button class="btn btn-dark" type="button" onclick="fecharSubstituirNovel()">CANCELAR</button><button class="btn btn-primary" type="button" onclick="guardarSubstituirNovel()">💾 SUBSTITUIR ZIP</button></div>
+  </div>
+</div>
+
+<div id="adminEditModal" class="admin-modal" onclick="if(event.target===this)fecharEditarObra()">
+  <div class="admin-modal-card">
+    <div class="admin-modal-head"><h3>✏️ Editar obra</h3><button class="admin-modal-close" type="button" onclick="fecharEditarObra()">✕</button></div>
+    <input id="adminEditId" type="hidden">
+    <label>Título</label><input id="adminEditTitulo" placeholder="Título da obra">
+    <div class="two"><div><label>Autor</label><input id="adminEditAutor"></div><div><label>Gênero</label><input id="adminEditGenero"></div></div>
+    <label>Tipo</label><select id="adminEditTipo"><option>MANGÁ</option><option>LIGHT NOVEL</option></select>
+    <label>Descrição</label><textarea id="adminEditDescricao" placeholder="Descrição da obra"></textarea>
+    <label>Estado</label><select id="adminEditPublicada"><option value="true">PUBLICADA</option><option value="false">RASCUNHO</option></select>
+    <label>Capa</label><div class="admin-edit-cover"><img id="adminEditCapaAtual" alt="Capa atual"><div class="admin-edit-cover-info"><input id="adminEditCapa" type="file" accept="image/*" onchange="previewCapaEdicao(event)"><div id="adminEditCapaStatus" class="admin-edit-status">Nenhuma nova capa selecionada.</div></div></div>
+    <div id="progressoEdicaoObra" class="progress-box"><div class="progress-track"><div class="progress-bar"></div></div><div class="progress-text"></div></div>
+    <div class="admin-modal-actions"><button class="btn btn-dark" type="button" onclick="fecharEditarObra()">CANCELAR</button><button class="btn btn-primary" type="button" onclick="guardarEdicaoObra()">💾 GUARDAR ALTERAÇÕES</button></div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div><div id="downloadOverlay" class="download-overlay"><div class="download-card"><h3 id="downloadTitle">📥 A guardar offline</h3><div id="downloadStatus" class="download-status">A preparar...</div><div id="downloadDetail" class="download-detail"></div><div class="download-track"><i id="downloadBar"></i></div><div id="downloadPercent" class="download-percent">0%</div></div></div>
+
+<script>
+const SUPABASE_URL="https://wxejkttwofwdkuwnzica.supabase.co";
+const SUPABASE_KEY="sb_publishable_ZvVB5WGovQH_kdvKH5GI5A_uj3Oe7X3";
+let supabaseClient=null;
+if(window.supabase && typeof window.supabase.createClient==="function"){
+  supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+}else{
+  console.error("Supabase JS não foi carregado.");
+}
+const BUCKET="anaga";
+// URL usada pelo Supabase depois da confirmação de e-mail.
+// No APK Android, o deep link deve ser registado no AndroidManifest: anaga://auth/callback
+const AUTH_REDIRECT_URL=(location.protocol==="http:"||location.protocol==="https:") ? location.origin : "anaga://auth/callback";
+let obras=[],biblioteca=[],capaArquivo=null,usuarioAtual=null,administrador=false;
+let paginasSelecionadas=[];
+let leitorEstado={obra:null,capitulo:null,pagina:0};
+
+const $=id=>document.getElementById(id);
+function toast(m){
+  const t=$("toast");
+  if(!t){alert(m);return}
+  t.textContent=m;
+  t.style.display="block";
+  clearTimeout(window._toast);
+  window._toast=setTimeout(()=>t.style.display="none",3200);
+}
+function exigirSupabase(){
+  if(!supabaseClient){
+    toast("Supabase não carregou. Verifica a internet e tenta novamente.");
+    return false;
+  }
+  return true;
+}
+function esconderPaginas(){["inicio","biblioteca","leitor","auth","admin"].forEach(id=>$(id)?.classList.add("hidden"))}
+async function mostrarPagina(p){
+ if(p==="biblioteca"&&!usuarioAtual){abrirLogin();toast("Entra na tua conta para usar a biblioteca.");return}
+ if(p==="admin"&&!administrador){toast("Acesso reservado ao administrador.");return}
+ esconderPaginas();$(p)?.classList.remove("hidden");$("navInicio").classList.toggle("active",p==="inicio");
+ if(p==="inicio")renderizarObras();if(p==="biblioteca")await renderizarBiblioteca();if(p==="admin")atualizarAdmin();
+}
+function voltarInicio(){mostrarPagina("inicio")}
+function abrirLogin(){
+  esconderPaginas();
+  const auth=$("auth");
+  if(auth) auth.classList.remove("hidden");
+  atualizarAuthInterface();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function mostrarLogin(){$("loginForm").classList.remove("hidden");$("criarContaForm").classList.add("hidden")}
+function mostrarCriarConta(){$("loginForm").classList.add("hidden");$("criarContaForm").classList.remove("hidden")}
+function escapar(x){return x==null?"":String(x).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
+function ext(n){let a=n.split(".");return a.length>1?a.pop().toLowerCase():"bin"}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2)}
+function pad(n){return String(n).padStart(3,"0")}
+function criarCapaPadrao(t){return"data:image/svg+xml;charset=UTF-8,"+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="500" height="700"><rect width="100%" height="100%" fill="#120012"/><text x="50%" y="45%" fill="#ff00aa" font-size="45" font-weight="bold" text-anchor="middle">ANAGA</text><text x="50%" y="55%" fill="white" font-size="22" text-anchor="middle">${t}</text></svg>`)}
+
+function mostrarProgresso(id,p,texto){const b=$(id);if(!b)return;b.style.display="block";b.querySelector(".progress-bar").style.width=p+"%";b.querySelector(".progress-text").textContent=texto}
+function esconderProgresso(id){if($(id))$(id).style.display="none"}
+async function uploadArquivo(arq,path){const {error}=await supabaseClient.storage.from(BUCKET).upload(path,arq,{cacheControl:"3600",upsert:true,contentType:arq.type||"application/octet-stream"});if(error)throw error;return supabaseClient.storage.from(BUCKET).getPublicUrl(path).data.publicUrl}
+
+async function criarConta(){
+ if(!exigirSupabase())return;
+ const nome=$("cadastroNome").value.trim(),email=$("cadastroEmail").value.trim(),senha=$("cadastroSenha").value,conf=$("cadastroSenhaConfirmar").value;
+ if(!nome||!email||senha.length<6||senha!==conf)return toast(!nome?"Digite o nome.":!email?"Digite o e-mail.":senha.length<6?"A senha deve ter pelo menos 6 caracteres.":"As senhas não coincidem.");
+ try{const {data,error}=await supabaseClient.auth.signUp({email,password:senha,options:{data:{nome},emailRedirectTo:AUTH_REDIRECT_URL}});if(error)throw error;if(data.user)await supabaseClient.from("perfis").upsert({id:data.user.id,nome},{onConflict:"id"});toast(data.session?"Conta criada com sucesso!":"Conta criada! Verifica o teu e-mail.");mostrarLogin()}catch(e){console.error(e);toast(e.message||"Erro ao criar conta.")}
+}
+async function fazerLogin(){
+ if(!exigirSupabase())return;
+ const email=$("loginEmail").value.trim(),senha=$("loginSenha").value;if(!email||!senha)return toast("Preencha o e-mail e a senha.");
+ try{const {data,error}=await supabaseClient.auth.signInWithPassword({email,password:senha});if(error)throw error;usuarioAtual=data.user;await atualizarUsuario();$("loginSenha").value="";toast("Login realizado!");atualizarCabecalho()}catch(e){toast(e.message||"E-mail ou senha incorretos.")}
+}
+async function fazerLogout(){await supabaseClient.auth.signOut();usuarioAtual=null;administrador=false;biblioteca=[];atualizarCabecalho();atualizarAuthInterface();mostrarPagina("inicio");toast("Sessão encerrada.")}
+async function verificarSessao(){const {data}=await supabaseClient.auth.getSession();usuarioAtual=data.session?.user||null;await atualizarUsuario();atualizarCabecalho();atualizarAuthInterface();
+ if(usuarioAtual&&window.location.hash.includes("access_token")){toast("E-mail confirmado com sucesso! Sessão iniciada.");history.replaceState(null,"",window.location.pathname+window.location.search)}
+}
+
+if(supabaseClient){supabaseClient.auth.onAuthStateChange((event,session)=>{
+ if(session?.user){usuarioAtual=session.user;atualizarUsuario();atualizarCabecalho();atualizarAuthInterface();}
+});}
+async function atualizarUsuario(){
+ administrador=false;if(!usuarioAtual){atualizarAdminVisibilidade();return}
+ const {data:perfil}=await supabaseClient.from("perfis").select("nome").eq("id",usuarioAtual.id).maybeSingle();if(perfil?.nome){usuarioAtual.user_metadata=usuarioAtual.user_metadata||{};usuarioAtual.user_metadata.nome=perfil.nome}
+ const {data:a}=await supabaseClient.from("administradores").select("administrador").eq("id",usuarioAtual.id).maybeSingle();administrador=a?.administrador===true;
+ await carregarBiblioteca();atualizarAuthInterface();atualizarAdminVisibilidade()
+}
+function atualizarAuthInterface(){
+ const login=$("loginForm"),cad=$("criarContaForm"),user=$("userForm");
+ if(usuarioAtual){login.classList.add("hidden");cad.classList.add("hidden");user.classList.remove("hidden");let m=usuarioAtual.user_metadata||{},nome=m.nome||usuarioAtual.email?.split("@")[0]||"Utilizador";$("userNome").textContent=nome;$("userEmail").textContent=usuarioAtual.email||"";$("userAvatar").textContent=nome[0].toUpperCase()}else{login.classList.remove("hidden");cad.classList.add("hidden");user.classList.add("hidden")}atualizarAdminVisibilidade()
+}
+function atualizarAdminVisibilidade(){document.querySelectorAll(".admin-only").forEach(e=>e.style.display=administrador?"block":"none")}
+function atualizarCabecalho(){$("authMenuBtn").textContent=usuarioAtual?"MINHA CONTA":"ENTRAR"}
+
+async function carregarObras(){
+ const c=$("listaObras");if(c)c.innerHTML='<div class="loading">Carregando obras...</div>';
+ const {data,error}=await supabaseClient.from("obras").select("*,capitulos(*,paginas(*))").order("data_criacao",{ascending:false});
+ if(error){console.error(error);if(c)c.innerHTML='<div class="empty">Não foi possível carregar as obras.</div>';return}
+ obras=data||[];obras.forEach(o=>{o.capitulos=o.capitulos||[];o.capitulos.sort((a,b)=>Number(a.numero)-Number(b.numero));o.capitulos.forEach(c=>c.paginas=(c.paginas||[]).sort((a,b)=>Number(a.ordem)-Number(b.ordem)))});renderizarObras();atualizarAdmin()
+}
+function renderizarObras(lista=obras){
+ const c=$("listaObras");if(!c)return;
+ const publicadas=lista.filter(o=>o.publicada!==false);
+ c.innerHTML="";if(!publicadas.length){c.innerHTML='<div class="empty">Ainda não existem obras publicadas.</div>';return}
+ publicadas.forEach(o=>{let d=document.createElement("div");d.className="card";let capa=o._offlineCapaBlob?URL.createObjectURL(o._offlineCapaBlob):(o.capa_url||criarCapaPadrao(o.titulo));d.innerHTML=`<img class="card-cover" src="${escapar(capa)}"><div class="card-body"><div class="type">${escapar(o.tipo)}</div><h3>${escapar(o.titulo)}</h3><p>${escapar(o.autor)}</p><p>${o.capitulos?.length||0} capítulo(s)</p><br><button class="btn btn-primary" style="width:100%" onclick="abrirObra(${o.id})">LER</button></div>`;if(o._offlineCapaBlob){const im=d.querySelector(".card-cover");im.addEventListener("load",()=>setTimeout(()=>{try{URL.revokeObjectURL(capa)}catch(_){}},1000),{once:true})}c.appendChild(d)})
+}
+async function carregarObrasOffline(){
+  try{
+    const db=await dbOpen();
+    const cached=await new Promise((res,rej)=>{
+      const r=db.transaction(STORE).objectStore(STORE).getAll();
+      r.onsuccess=()=>res(r.result||[]);
+      r.onerror=()=>rej(r.error);
+    });
+    cached.forEach(off=>{
+      const i=obras.findIndex(x=>Number(x.id)===Number(off.id));
+      const merged={
+        ...(i>=0?obras[i]:{}),
+        ...off,
+        _offline:true,
+        _offlineCapaBlob:off.capa_blob||null
+      };
+      if(i>=0)obras[i]=merged;
+      else obras.push(merged);
+    });
+    if(obras.length)renderizarObras();
+    else $("listaObras").innerHTML='<div class="empty">Não existem obras guardadas offline.</div>';
+  }catch(e){
+    console.warn("Não foi possível abrir o armazenamento offline:",e);
+  }
+}
+
+function pesquisar(){let q=$("pesquisa").value.toLowerCase().trim();let lista=obras.filter(o=>o.publicada!==false);renderizarObras(!q?lista:lista.filter(o=>(o.titulo+" "+o.autor+" "+o.genero+" "+o.tipo).toLowerCase().includes(q)))}
+function filtrarTipo(tipo){esconderPaginas();$("inicio").classList.remove("hidden");renderizarObras(obras.filter(o=>o.publicada!==false&&o.tipo===tipo))}
+
+async function carregarBiblioteca(){biblioteca=[];if(!usuarioAtual)return;const {data}=await supabaseClient.from("biblioteca").select("obra_id").eq("usuario_id",usuarioAtual.id);biblioteca=(data||[]).map(x=>Number(x.obra_id))}
+async function adicionarBiblioteca(id){if(!usuarioAtual){abrirLogin();toast("Entra na tua conta.");return}id=Number(id);if(biblioteca.includes(id))return toast("Já está na biblioteca.");const {error}=await supabaseClient.from("biblioteca").insert({usuario_id:usuarioAtual.id,obra_id:id});if(error)return toast(error.message);biblioteca.push(id);toast("Obra adicionada.")}
+async function removerBiblioteca(id){const {error}=await supabaseClient.from("biblioteca").delete().eq("usuario_id",usuarioAtual.id).eq("obra_id",Number(id));if(error)return toast(error.message);biblioteca=biblioteca.filter(x=>x!==Number(id));renderizarBiblioteca()}
+async function renderizarBiblioteca(){let c=$("bibliotecaLista");if(!usuarioAtual)return c.innerHTML='<div class="empty">Entra na tua conta.</div>';await carregarBiblioteca();let lista=obras.filter(o=>o.publicada!==false&&biblioteca.includes(Number(o.id)));c.innerHTML=lista.length?"":'<div class="empty">A tua biblioteca está vazia.</div>';lista.forEach(o=>{let d=document.createElement("div");d.className="card";let capa=o._offlineCapaBlob?URL.createObjectURL(o._offlineCapaBlob):(o.capa_url||criarCapaPadrao(o.titulo));d.innerHTML=`<img class="card-cover" src="${escapar(capa)}"><div class="card-body"><div class="type">${escapar(o.tipo)}</div><h3>${escapar(o.titulo)}</h3><button class="btn btn-primary" style="width:100%" onclick="abrirObra(${o.id})">CONTINUAR</button><button class="btn btn-danger" style="width:100%;margin-top:8px" onclick="removerBiblioteca(${o.id})">REMOVER</button></div>`;c.appendChild(d)})}
+
+async function abrirObra(id){
+  let o=obras.find(x=>Number(x.id)===Number(id));
+  if(!o){try{o=await dbGet(Number(id));if(o){o._offline=true;o._offlineCapaBlob=o.capa_blob||null;obras.push(o)}}catch(_){}}
+  if(!o)return;
+  esconderPaginas();$("leitor").classList.remove("hidden");
+  let capitulos=(o.capitulos||[]).slice().sort((a,b)=>a.numero-b.numero);
+  const offline=!!(o._offline||o.capa_blob||capitulos.some(c=>c.arquivo_blob||c.paginas?.some(p=>p.blob)));
+  $("readerHeader").innerHTML=`<h2>${escapar(o.titulo)}</h2><p style="color:#aaa;margin-top:5px">${escapar(o.tipo)} • ${escapar(o.autor)}</p><p style="color:#777;margin-top:8px">${escapar(o.descricao)}</p><span class="offline-badge" id="offlineBadge">${offline?"GUARDADA OFFLINE":"ONLINE"}</span><div class="chapter-list">${capitulos.length?capitulos.map(c=>`<div class="chapter-item"><div><strong>${escapar(c.titulo)}</strong><br><span>Capítulo ${c.numero} • ${o.tipo==="MANGÁ"?(c.paginas?.length||0)+" página(s)":"Light Novel"}</span></div><button class="btn btn-primary btn-small" onclick="lerCapitulo(${c.id})">LER</button></div>`).join(""):'<div class="empty">Esta obra ainda não possui capítulos.</div>'}</div><div class="two" style="margin-top:10px"><button class="btn btn-dark" onclick="baixarObraZIP(${o.id})">⬇️ BAIXAR ZIP</button><button class="btn btn-primary" onclick="guardarObraOffline(${o.id})">📥 GUARDAR OFFLINE</button></div><button class="btn btn-dark download-btn" style="width:100%;margin-top:10px" onclick="adicionarBiblioteca(${o.id})">📚 ${biblioteca.includes(Number(o.id))?"NA BIBLIOTECA":"ADICIONAR À BIBLIOTECA"}</button>`;
+  $("readerContent").innerHTML='<div class="empty">Seleciona um capítulo para começar.</div>';
+}
+
+async function lerCapitulo(id){
+  let o=null,c=null;
+  for(const x of obras){const f=x.capitulos?.find(y=>Number(y.id)===Number(id));if(f){o=x;c=f;break}}
+  if(!c){try{const z=await dbGetByChapter(Number(id));if(z){o=z.obra;c=z.capitulo}}catch(_){}}
+  if(!c||!o)return;
+  try{
+    const off=await dbGet(Number(o.id));
+    if(off){o={...o,...off,_offline:true,_offlineCapaBlob:off.capa_blob||null};const oc=off.capitulos?.find(x=>Number(x.id)===Number(c.id));if(oc)c={...c,...oc,paginas:(oc.paginas||[]).map(p=>({...p,_offlineBlob:p.blob||null}))}}
+  }catch(e){console.warn("Offline não disponível",e)}
+  const salvo=Number(localStorage.getItem("anaga_last_"+o.id+"_"+c.id));
+  leitorEstado={obra:o,capitulo:c,pagina:Number.isInteger(salvo)&&salvo>=0?salvo:0};
+  $("readerContent").innerHTML='<div class="loading">Carregando capítulo...</div>';
+  if(o.tipo==="MANGÁ"){$("leitor").classList.add("hidden");return abrirLeitorManga()}
+  $("leitor").classList.add("hidden");return lerLightNovel(c);
+}
+async function dbGetByChapter(id){
+  const db=await dbOpen();
+  return new Promise((res,rej)=>{const r=db.transaction(STORE).objectStore(STORE).getAll();r.onsuccess=()=>{const obra=(r.result||[]).find(o=>(o.capitulos||[]).some(c=>Number(c.id)===Number(id)));const cap=obra?.capitulos?.find(c=>Number(c.id)===Number(id));res(obra&&cap?{obra,capitulo:cap}:null)};r.onerror=()=>rej(r.error)})
+}
+
+function mangaCapitulos(){
+ return (leitorEstado.obra?.capitulos||[]).slice().sort((a,b)=>Number(a.numero)-Number(b.numero));
+}
+function mangaPaginas(){
+ return (leitorEstado.capitulo?.paginas||[]).slice().sort((a,b)=>Number(a.ordem)-Number(b.ordem));
+}
+let mangaLeitorConfig={modo:"vertical",ajuste:"largura",dupla:false,direcao:"rtl",fundo:"preto",brilho:100,ui:true};
+let mangaObserver=null,mangaScrollTimer=null,mangaAutoTimer=null,mangaTouchStartX=0,mangaTouchStartY=0,mangaLastTap=0;
+let mangaPosicionando=false,mangaObjectUrls=[],mangaBlobUrlCache=new Map();
+
+function mangaKey(){return "anaga_manga_cfg"}
+function guardarConfigManga(){try{localStorage.setItem(mangaKey(),JSON.stringify(mangaLeitorConfig))}catch(_){}}
+function carregarConfigManga(){try{const x=JSON.parse(localStorage.getItem(mangaKey())||"null");if(x&&typeof x==="object")mangaLeitorConfig={...mangaLeitorConfig,...x}}catch(_){}}
+carregarConfigManga();
+
+let mangaObjectUrlCache=new Map();
+function mangaLiberarObjectUrls(){
+ mangaObjectUrlCache.forEach(u=>{try{URL.revokeObjectURL(u)}catch(_){} });
+ mangaObjectUrlCache.clear();mangaObjectUrls=[];
+}
+function mangaUrlPagina(p){
+ if(p&&p._offlineBlob){
+   const key=String(p.id||p.ordem||Math.random());
+   if(mangaObjectUrlCache.has(key))return mangaObjectUrlCache.get(key);
+   try{const u=URL.createObjectURL(p._offlineBlob);mangaObjectUrlCache.set(key,u);return u}catch(_){}
+ }
+ return p?.imagem_url||"";
+}
+function mangaAtualizarUI(){
+ const total=mangaTotal(),atual=mangaPaginaAtual(),pct=total?((atual+1)/total*100):0;
+ const pr=$("mangaProgress");if(pr)pr.style.width=pct+"%";
+ const sl=$("mangaSlider");if(sl){sl.max=Math.max(0,total-1);sl.value=atual}
+ const co=$("mangaCounter");if(co)co.textContent=total?(atual+1)+" / "+total:"0 / 0";
+ const ml=$("mangaModeLabel");if(ml)ml.textContent=mangaLeitorConfig.modo==="vertical"?"VERTICAL":"HORIZONTAL";
+ const bm=$("mangaBookmark");const k="anaga_bookmark_"+leitorEstado.obra?.id+"_"+leitorEstado.capitulo?.id;
+ if(bm)bm.textContent=Number(localStorage.getItem(k))===atual?"★":"☆";
+ const bm2=$("mangaBookmark2");if(bm2)bm2.textContent=Number(localStorage.getItem(k))===atual?"★ MARCADOR":"☆ MARCADOR";
+}
+function mangaPaginaAtual(){return Math.max(0,Math.min(Number(leitorEstado.pagina)||0,Math.max(0,mangaTotal()-1)))}
+function mangaTotal(){return mangaPaginas().length}
+function mangaSalvarProgresso(i){
+ if(!leitorEstado.obra||!leitorEstado.capitulo)return;
+ const total=mangaTotal();if(!total)return;
+ leitorEstado.pagina=Math.max(0,Math.min(Number(i)||0,total-1));
+ try{localStorage.setItem("anaga_last_"+leitorEstado.obra.id+"_"+leitorEstado.capitulo.id,String(leitorEstado.pagina))}catch(_){}
+ mangaAtualizarUI();
+}
+function mangaPrecarregar(indices){
+ const ps=mangaPaginas();
+ indices.filter(i=>i>=0&&i<ps.length).forEach(n=>{
+   const im=new Image();im.decoding="async";im.src=mangaUrlPagina(ps[n]);
+ });
+}
+function mangaAplicarFundo(){
+ const s=$("mangaScreen");if(!s)return;
+ s.dataset.bg=mangaLeitorConfig.fundo;
+}
+function mangaScrollVertical(){
+ const v=$("mangaViewport");if(!v||mangaPosicionando)return;
+ clearTimeout(mangaScrollTimer);mangaScrollTimer=setTimeout(()=>{
+   if(mangaPosicionando)return;
+   const pages=[...v.querySelectorAll(".manga-page-full")];let best=mangaPaginaAtual(),dist=Infinity,mid=v.scrollTop+v.clientHeight*.38;
+   pages.forEach((el,i)=>{const d=Math.abs(el.offsetTop+el.offsetHeight*.35-mid);if(d<dist){dist=d;best=i}});
+   mangaSalvarProgresso(best);mangaPrecarregar([best-1,best+1]);
+ },80);
+}
+function renderMangaVertical(){
+ const v=$("mangaViewport");if(!v)return;
+ mangaPosicionando=true;v.innerHTML="";v.onscroll=mangaScrollVertical;
+ const ps=mangaPaginas(),fit=mangaLeitorConfig.ajuste;
+ ps.forEach((p,i)=>{
+   const wrap=document.createElement("div");wrap.className="manga-page-full";wrap.id="mangaPage_"+i;wrap.dataset.page=i;
+   const img=document.createElement("img");img.alt=`Página ${i+1}`;img.loading=Math.abs(i-mangaPaginaAtual())<3?"eager":"lazy";img.decoding="async";img.src=mangaUrlPagina(p);img.className="manga-image-vertical fit-"+fit;img.draggable=false;
+   img.onerror=()=>wrap.classList.add("manga-image-error");wrap.appendChild(img);v.appendChild(wrap);
+ });
+ if(mangaObserver)mangaObserver.disconnect();
+ if("IntersectionObserver" in window){
+   mangaObserver=new IntersectionObserver(entries=>{
+     if(mangaPosicionando)return;
+     let best=null;entries.forEach(e=>{if(e.isIntersecting&&(!best||e.intersectionRatio>best.intersectionRatio))best=e});
+     if(best)mangaSalvarProgresso(Number(best.target.dataset.page)||0);
+   },{root:v,threshold:[.45,.7,.9]});
+   v.querySelectorAll(".manga-page-full").forEach(x=>mangaObserver.observe(x));
+ }
+ setTimeout(()=>{
+   const el=$("mangaPage_"+mangaPaginaAtual());
+   if(el)el.scrollIntoView({block:"start",behavior:"auto"});
+   requestAnimationFrame(()=>{mangaPosicionando=false;mangaAtualizarUI()});
+ },30);
+ mangaPrecarregar([mangaPaginaAtual()-1,mangaPaginaAtual()+1,mangaPaginaAtual()+2]);
+}
+function mangaCriarSpread(stage,indexes){
+ const spread=document.createElement("div");spread.className="manga-spread";if(indexes.length>1)spread.classList.add("dupla");spread.dataset.page=indexes[0];
+ indexes.forEach(n=>{
+   const img=document.createElement("img");img.className="manga-image-horizontal fit-"+mangaLeitorConfig.ajuste;img.alt=`Página ${n+1}`;
+   img.src=mangaUrlPagina(mangaPaginas()[n]);img.draggable=false;img.loading=Math.abs(n-mangaPaginaAtual())<3?"eager":"lazy";img.decoding="async";
+   img.onerror=()=>img.classList.add("manga-image-error");spread.appendChild(img)
+ });
+ stage.appendChild(spread);
+}
+function mangaScrollHorizontal(){
+ const v=$("mangaViewport");if(!v||mangaPosicionando)return;
+ clearTimeout(mangaScrollTimer);mangaScrollTimer=setTimeout(()=>{
+   if(mangaPosicionando)return;
+   const spreads=[...v.querySelectorAll(".manga-spread")];if(!spreads.length)return;
+   const vr=v.getBoundingClientRect(),centerX=vr.left+vr.width/2;let best=0,dist=Infinity;
+   spreads.forEach((el,i)=>{const r=el.getBoundingClientRect(),d=Math.abs((r.left+r.width/2)-centerX);if(d<dist){dist=d;best=i}});
+   const n=Number(spreads[best].dataset.page)||0;
+   mangaSalvarProgresso(n);mangaPrecarregar([n-2,n-1,n+1,n+2]);
+ },60)
+}
+function mangaPosicionarHorizontal(target,v){
+ if(!target)return;
+ mangaPosicionando=true;
+ const left=target.offsetLeft-Math.max(0,(v.clientWidth-target.offsetWidth)/2);
+ const max=Math.max(0,v.scrollWidth-v.clientWidth);
+ const finalLeft=Math.max(0,Math.min(max,left));
+ try{v.scrollTo({left:finalLeft,behavior:"auto"})}catch(_){v.scrollLeft=finalLeft}
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{mangaPosicionando=false;mangaAtualizarUI()}));
+}
+function renderMangaHorizontal(){
+ const v=$("mangaViewport");if(!v)return;
+ mangaPosicionando=true;
+ if(mangaObserver){mangaObserver.disconnect();mangaObserver=null}
+ v.innerHTML="";v.onscroll=mangaScrollHorizontal;
+ v.classList.add("horizontal-continuo");v.style.direction="ltr";
+ const ps=mangaPaginas(),stage=document.createElement("div");stage.className="manga-horizontal-stage";stage.style.flexDirection="row";
+ const step=mangaLeitorConfig.dupla?2:1;
+ let groups=[];
+ if(mangaLeitorConfig.direcao==="rtl"){
+   for(let end=ps.length-1;end>=0;end-=step){let indexes=[end];if(step===2&&end-1>=0)indexes.push(end-1);groups.push(indexes)}
+ }else{
+   for(let start=0;start<ps.length;start+=step){let indexes=[start];if(step===2&&start+1<ps.length)indexes.push(start+1);groups.push(indexes)}
+ }
+ groups.forEach(indexes=>mangaCriarSpread(stage,indexes));
+ v.appendChild(stage);
+ const current=mangaPaginaAtual();
+ const target=[...v.querySelectorAll(".manga-spread")].find(x=>[...x.querySelectorAll("img")].some(img=>img.alt===`Página ${current+1}`))||v.querySelector(".manga-spread");
+ setTimeout(()=>mangaPosicionarHorizontal(target,v),40);
+ mangaPrecarregar([current-2,current-1,current+1,current+2]);
+}
+function renderMangaPages(){
+ mangaAplicarFundo();const v=$("mangaViewport");if(!v)return;
+ v.classList.toggle("modo-vertical",mangaLeitorConfig.modo==="vertical");v.classList.toggle("modo-horizontal",mangaLeitorConfig.modo==="horizontal");
+ if(mangaLeitorConfig.modo==="vertical")renderMangaVertical();else renderMangaHorizontal();
+ const s=$("mangaScreen");if(s)s.dataset.fit=mangaLeitorConfig.ajuste;
+ mangaAtualizarUI();
+}
+function mangaTogglePainel(){const p=$("mangaSettings");if(p)p.classList.toggle("open")}
+function mangaDefinirModo(modo){mangaLeitorConfig.modo=modo==="horizontal"?"horizontal":"vertical";mangaLeitorConfig.ui=true;guardarConfigManga();$("mangaScreen")?.classList.remove("manga-ui-hidden");renderMangaPages()}
+function mangaDefinirAjuste(v){mangaLeitorConfig.ajuste=["largura","altura","original"].includes(v)?v:"largura";guardarConfigManga();renderMangaPages()}
+function mangaDefinirFundo(v){mangaLeitorConfig.fundo=["preto","cinza","branco"].includes(v)?v:"preto";guardarConfigManga();mangaAplicarFundo()}
+function mangaDefinirDirecao(v){mangaLeitorConfig.direcao=v==="ltr"?"ltr":"rtl";guardarConfigManga();renderMangaPages()}
+function mangaToggleDupla(){mangaLeitorConfig.dupla=!mangaLeitorConfig.dupla;guardarConfigManga();renderMangaPages()}
+function mangaIrPagina(i){
+ const total=mangaTotal();if(!total)return;
+ i=Math.max(0,Math.min(Number(i)||0,total-1));mangaSalvarProgresso(i);
+ if(mangaLeitorConfig.modo==="vertical"){
+   const el=$("mangaPage_"+i);if(el)el.scrollIntoView({behavior:"smooth",block:"start"})
+ }else{
+   const v=$("mangaViewport");if(!v)return;
+   const spreads=[...v.querySelectorAll(".manga-spread")];
+   const step=mangaLeitorConfig.dupla?2:1;
+   const target=spreads.find(x=>Number(x.dataset.page)<=i&&Number(x.dataset.page)+step>i);
+   if(target)mangaPosicionarHorizontal(target,v,target.parentElement);else renderMangaHorizontal()
+ }
+}
+function mangaCapituloAnterior(){const cs=mangaCapitulos(),idx=cs.findIndex(x=>Number(x.id)===Number(leitorEstado.capitulo.id));if(idx>0){leitorEstado.capitulo=cs[idx-1];leitorEstado.pagina=0;abrirLeitorManga(true)}else toast("Já estás no primeiro capítulo.")}
+function mangaCapituloSeguinte(){const cs=mangaCapitulos(),idx=cs.findIndex(x=>Number(x.id)===Number(leitorEstado.capitulo.id));if(idx>=0&&idx<cs.length-1){leitorEstado.capitulo=cs[idx+1];leitorEstado.pagina=0;abrirLeitorManga(true)}else toast("Fim da obra.")}
+function paginaAnterior(){if(mangaPaginaAtual()>0)mangaIrPagina(mangaPaginaAtual()-1);else mangaCapituloAnterior()}
+function paginaSeguinte(){if(mangaPaginaAtual()<mangaTotal()-1)mangaIrPagina(mangaPaginaAtual()+1);else mangaCapituloSeguinte()}
+function mangaToggleUI(){mangaLeitorConfig.ui=!mangaLeitorConfig.ui;$("mangaScreen")?.classList.toggle("manga-ui-hidden",!mangaLeitorConfig.ui);guardarConfigManga()}
+function mangaToggleBookmark(){const k="anaga_bookmark_"+leitorEstado.obra?.id+"_"+leitorEstado.capitulo?.id,atual=Number(localStorage.getItem(k));if(atual===mangaPaginaAtual()){localStorage.removeItem(k);toast("Marcador removido.")}else{localStorage.setItem(k,String(mangaPaginaAtual()));toast("Página marcada.")}mangaAtualizarUI()}
+function mangaAutoPlay(){if(mangaAutoTimer){clearInterval(mangaAutoTimer);mangaAutoTimer=null;mangaAtualizarUI();toast("Leitura automática desligada");return}toast("Leitura automática: 8 segundos por página");mangaAutoTimer=setInterval(()=>{if(!$("mangaScreen")){clearInterval(mangaAutoTimer);mangaAutoTimer=null;return}if(mangaPaginaAtual()>=mangaTotal()-1){mangaCapituloSeguinte();return}paginaSeguinte()},8000);mangaAtualizarUI()}
+async function mangaPartilhar(){const texto=`${leitorEstado.obra?.titulo||"Mangá"} — Capítulo ${leitorEstado.capitulo?.numero||""}, página ${mangaPaginaAtual()+1}`;try{if(navigator.share)await navigator.share({title:leitorEstado.obra?.titulo||"ANAGA",text:texto});else{await navigator.clipboard.writeText(texto);toast("Progresso copiado.")}}catch(_){}
+}
+function mangaAjustarBrilho(v){mangaLeitorConfig.brilho=Math.max(40,Math.min(100,Number(v)||100));const b=$("mangaDimmer");if(b)b.style.opacity=String(1-mangaLeitorConfig.brilho/100);guardarConfigManga()}
+function fecharLeitorManga(){mangaLiberarObjectUrls();if(mangaObserver){mangaObserver.disconnect();mangaObserver=null}clearTimeout(mangaScrollTimer);if(mangaAutoTimer){clearInterval(mangaAutoTimer);mangaAutoTimer=null}const s=$("mangaScreen");if(s&&document.fullscreenElement){try{document.exitFullscreen()}catch(_){} }if(s)s.remove();abrirObra(leitorEstado.obra?.id)}
+function abrirLeitorManga(reutilizar){
+ let screen=$("mangaScreen");
+ if(!screen){screen=document.createElement("div");screen.id="mangaScreen";screen.innerHTML=`
+  <div class="manga-topbar"><button id="mangaBack" class="manga-top-btn" type="button">←</button><div class="manga-title-wrap"><strong id="mangaTitle"></strong><span id="mangaChapter"></span></div><div class="manga-actions"><button id="mangaBookmark" class="manga-top-btn" type="button">☆</button><button id="mangaSettingsBtn" class="manga-top-btn" type="button">⚙</button><button id="mangaFull" class="manga-top-btn" type="button">⛶</button></div></div>
+  <div id="mangaViewport" class="manga-viewport"><div class="manga-loading">Carregando...</div></div><div id="mangaDimmer"></div><div id="mangaTapHint">Toca no centro para mostrar/ocultar os controlos</div>
+  <div id="mangaSettings" class="manga-settings"><div class="manga-settings-head"><strong>CONFIGURAÇÕES DO LEITOR</strong><button id="mangaSettingsClose" type="button">✕</button></div>
+   <div class="manga-setting-group"><span>Modo de leitura</span><div class="manga-setting-row"><button data-mode="vertical">↕ VERTICAL</button><button data-mode="horizontal">↔ HORIZONTAL</button></div></div>
+   <div class="manga-setting-group"><span>Ajuste da página</span><div class="manga-setting-row"><button data-fit="largura">LARGURA</button><button data-fit="altura">ALTURA</button><button data-fit="original">ORIGINAL</button></div></div>
+   <div class="manga-setting-group"><span>Direção</span><div class="manga-setting-row"><button data-dir="rtl">DIREITA → ESQUERDA</button><button data-dir="ltr">ESQUERDA → DIREITA</button></div></div>
+   <div class="manga-setting-group"><span>Fundo</span><div class="manga-setting-row"><button data-bg="preto">PRETO</button><button data-bg="cinza">CINZA</button><button data-bg="branco">BRANCO</button></div></div>
+   <div class="manga-setting-group"><label for="mangaBrightness">Brilho</label><input id="mangaBrightness" type="range" min="40" max="100" value="100"></div>
+   <div class="manga-setting-row manga-extra"><button id="mangaDouble" type="button">▣ DUAS PÁGINAS</button><button id="mangaAuto" type="button">▶ AUTO</button><button id="mangaShare" type="button">↗ PARTILHAR</button></div>
+   <div class="manga-setting-row manga-extra"><button type="button" onclick="mangaCapituloAnterior()">‹ CAPÍTULO ANTERIOR</button><button type="button" onclick="mangaCapituloSeguinte()">CAPÍTULO SEGUINTE ›</button></div>
+  </div>
+  <div class="manga-bottombar"><div class="manga-progress"><i id="mangaProgress"></i></div><div class="manga-slider-row"><button id="mangaPrev" type="button">←</button><input id="mangaSlider" type="range" min="0" max="0" value="0"><button id="mangaNext" type="button">→</button></div><div class="manga-controls"><span id="mangaCounter">0 / 0</span><button id="mangaModeLabel" type="button">VERTICAL</button><button id="mangaChapters" type="button">☰ CAPÍTULOS</button><button id="mangaBookmark2" type="button">☆ MARCADOR</button></div></div>`;
+  document.body.appendChild(screen);
+  $("mangaBack").onclick=fecharLeitorManga;$("mangaPrev").onclick=paginaAnterior;$("mangaNext").onclick=paginaSeguinte;$("mangaBookmark").onclick=mangaToggleBookmark;$("mangaBookmark2").onclick=mangaToggleBookmark;$("mangaSettingsBtn").onclick=mangaTogglePainel;$("mangaSettingsClose").onclick=mangaTogglePainel;$("mangaChapters").onclick=fecharLeitorManga;$("mangaModeLabel").onclick=()=>mangaDefinirModo(mangaLeitorConfig.modo==="vertical"?"horizontal":"vertical");$("mangaSlider").oninput=e=>mangaIrPagina(Number(e.target.value));$("mangaFull").onclick=async()=>{try{if(!document.fullscreenElement)await screen.requestFullscreen();else await document.exitFullscreen()}catch(_){} };$("mangaBrightness").oninput=e=>mangaAjustarBrilho(e.target.value);$("mangaDouble").onclick=mangaToggleDupla;$("mangaAuto").onclick=mangaAutoPlay;$("mangaShare").onclick=mangaPartilhar;
+  screen.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>mangaDefinirModo(b.dataset.mode));screen.querySelectorAll("[data-fit]").forEach(b=>b.onclick=()=>mangaDefinirAjuste(b.dataset.fit));screen.querySelectorAll("[data-dir]").forEach(b=>b.onclick=()=>mangaDefinirDirecao(b.dataset.dir));screen.querySelectorAll("[data-bg]").forEach(b=>b.onclick=()=>mangaDefinirFundo(b.dataset.bg));
+  $("mangaViewport").addEventListener("click",e=>{if(!e.target.closest(".manga-image-horizontal,.manga-image-vertical,.manga-page-full"))return;const now=Date.now();if(now-mangaLastTap<280){mangaToggleBookmark();mangaLastTap=0}else{mangaLastTap=now;setTimeout(()=>{if(Date.now()-mangaLastTap>=250)mangaToggleUI()},290)}});
+  screen.addEventListener("touchstart",e=>{const t=e.changedTouches[0];mangaTouchStartX=t.screenX;mangaTouchStartY=t.screenY},{passive:true});
+  screen.addEventListener("touchend",e=>{const t=e.changedTouches[0],dx=t.screenX-mangaTouchStartX,dy=t.screenY-mangaTouchStartY;if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)){e.preventDefault();if(mangaLeitorConfig.direcao==="rtl"?(dx<0):(dx>0))paginaSeguinte();else paginaAnterior()}},{passive:false});
+ }
+ const ps=mangaPaginas();if(!ps.length){$("mangaViewport").innerHTML='<div class="manga-loading">Este capítulo não possui páginas.</div>';screen.classList.remove("manga-ui-hidden");return screen}
+ const salvo=Number(localStorage.getItem("anaga_last_"+leitorEstado.obra.id+"_"+leitorEstado.capitulo.id));if(!reutilizar&&Number.isInteger(salvo)&&salvo>=0)leitorEstado.pagina=Math.min(salvo,ps.length-1);
+ $("mangaBrightness").value=mangaLeitorConfig.brilho||100;mangaAjustarBrilho(mangaLeitorConfig.brilho||100);renderMangaPages();screen.classList.remove("manga-ui-hidden");return screen;
+}
+document.addEventListener("keydown",e=>{const s=$("mangaScreen");if(!s)return;if(e.key==="Escape"){const panel=$("mangaSettings");if(panel?.classList.contains("open")){panel.classList.remove("open");return}if(document.fullscreenElement){document.exitFullscreen().catch(()=>{});return}fecharLeitorManga();return}if(["INPUT","TEXTAREA","SELECT"].includes(document.activeElement?.tagName))return;if(e.key==="ArrowLeft"){e.preventDefault();mangaLeitorConfig.direcao==="rtl"?paginaAnterior():paginaSeguinte()}else if(e.key==="ArrowRight"){e.preventDefault();mangaLeitorConfig.direcao==="rtl"?paginaSeguinte():paginaAnterior()}else if(e.key==="ArrowUp"){if(mangaLeitorConfig.modo==="vertical")paginaAnterior()}else if(e.key==="ArrowDown"){if(mangaLeitorConfig.modo==="vertical")paginaSeguinte()}else if(e.key===" "){e.preventDefault();paginaSeguinte()}else if(e.key.toLowerCase()==="f")$("mangaFull")?.click();else if(e.key.toLowerCase()==="b")mangaToggleBookmark();else if(e.key.toLowerCase()==="s")mangaTogglePainel();else if(e.key.toLowerCase()==="v")mangaDefinirModo("vertical");else if(e.key.toLowerCase()==="h")mangaDefinirModo("horizontal")});
+function lvnNormalizar(caminho){
+ let s=String(caminho||"").replace(/\\/g,"/").trim();
+ try{s=decodeURIComponent(s)}catch(_){ }
+ s=s.split("#")[0].split("?")[0];
+ if(s.startsWith("/"))s=s.slice(1);
+ const partes=[];
+ s.split("/").forEach(v=>{
+  if(!v||v===".")return;
+  if(v==="..")partes.pop();
+  else partes.push(v);
+ });
+ return partes.join("/");
+}
+function lvnChave(caminho){return lvnNormalizar(caminho).toLowerCase()}
+function lvnRefEspecial(v){return /^(data:|blob:|https?:|mailto:|javascript:|#)/i.test(String(v||""))}
+function lvnResolver(base,ref){
+ if(!ref)return "";
+ let raw=String(ref).trim().replace(/\\/g,"/");
+ if(lvnRefEspecial(raw))return raw;
+ raw=raw.split("#")[0].split("?")[0];
+ if(raw.startsWith("/"))return lvnNormalizar(raw);
+ const dir=String(base||"").replace(/\\/g,"/").split("/").slice(0,-1).join("/");
+ return lvnNormalizar((dir?dir+"/":"")+raw);
+}
+function lvnFindUrl(urls,ref){
+ if(!ref||lvnRefEspecial(ref))return null;
+ const k=lvnChave(ref);
+ if(urls[k])return urls[k];
+ return null;
+}
+function lvnRewriteCss(css,base,urls){
+ return String(css||"").replace(/url\(\s*("|')?([^"')]+)\1\s*\)/gi,(m,q,ref)=>{
+  const r=String(ref||"").trim();
+  if(lvnRefEspecial(r))return m;
+  const u=lvnFindUrl(urls,lvnResolver(base,r));
+  return u?`url("${u}")`:m;
+ });
+}
+function lvnRewriteSrcset(value,base,urls){
+ return String(value||"").split(",").map(item=>{
+  const bits=item.trim().split(/\s+/);if(!bits[0])return item;
+  const u=lvnFindUrl(urls,lvnResolver(base,bits[0]));
+  if(!u)return item;
+  bits[0]=u;return bits.join(" ");
+ }).join(", ");
+}
+function lvnAssetMime(nome){
+ const e=String(ext(nome)||"").toLowerCase();
+ const m={
+  jpg:"image/jpeg",jpeg:"image/jpeg",png:"image/png",gif:"image/gif",webp:"image/webp",avif:"image/avif",svg:"image/svg+xml",bmp:"image/bmp",ico:"image/x-icon",tif:"image/tiff",tiff:"image/tiff",
+  css:"text/css",woff:"font/woff",woff2:"font/woff2",ttf:"font/ttf",otf:"font/otf",eot:"application/vnd.ms-fontobject",
+  mp3:"audio/mpeg",ogg:"audio/ogg",wav:"audio/wav",m4a:"audio/mp4",mp4:"video/mp4",webm:"video/webm",m4v:"video/mp4",mov:"video/quicktime",
+  json:"application/json",xml:"application/xml",txt:"text/plain",wasm:"application/wasm"
+ };
+ return m[e]||null;
+}
+function lvnIsHtml(nome){return /\.(html?|xhtml)$/i.test(String(nome||""))}
+function lvnHashHref(raw){
+ const x=String(raw||"");
+ const hash=x.indexOf("#");
+ return {path:hash>=0?x.slice(0,hash):x,hash:hash>=0?x.slice(hash):""};
+}
+
+async function lerLightNovel(c){
+ const content=$("readerContent");
+ let offlineBlob=c.arquivo_blob||null;
+ if(!offlineBlob && leitorEstado.obra?.capitulos){
+   const oc=leitorEstado.obra.capitulos.find(x=>Number(x.id)===Number(c.id));
+   if(oc?.arquivo_blob)offlineBlob=oc.arquivo_blob;
+ }
+ if(!offlineBlob && !c.arquivo_url){
+  content.innerHTML=c.conteudo||'<div class="empty">Esta Light Novel não possui arquivo.</div>';
+  return;
+ }
+ let screen=null,htmlUrl=null,assetUrls=[];
+ const limparUrls=()=>{
+  if(htmlUrl)URL.revokeObjectURL(htmlUrl);
+  htmlUrl=null;
+  assetUrls.forEach(u=>{try{URL.revokeObjectURL(u)}catch(_){ }});
+  assetUrls=[];
+ };
+ try{
+  const old=$("lvnScreen");
+  if(old){if(old._anagaCleanup)old._anagaCleanup();else old.remove()}
+  screen=document.createElement("div");screen.id="lvnScreen";
+  screen.style.cssText="position:fixed;inset:0;z-index:99999;background:#fff;display:flex;flex-direction:column;width:100vw;height:100vh;height:100dvh;overflow:hidden;overscroll-behavior:none";
+  screen.innerHTML=`<div style="height:54px;min-height:54px;background:#080608;color:#fff;display:flex;align-items:center;gap:12px;padding:0 12px;border-bottom:1px solid #ff00aa;box-shadow:0 0 15px #ff00aa55;box-sizing:border-box"><strong style="font-size:14px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapar(c.titulo||"Light Novel")}</strong><button id="lvnClose" type="button" style="border:1px solid #ff00aa;background:#160b15;color:#fff;border-radius:9px;padding:9px 13px;font-weight:bold;cursor:pointer;flex:none">✕ FECHAR</button></div><iframe id="lvnFrame" title="Light Novel" style="display:block;flex:1 1 auto;width:100%;height:calc(100% - 54px);min-height:0;border:0;background:#fff"></iframe>`;
+  document.body.appendChild(screen);
+  const frame=screen.querySelector("#lvnFrame");
+  const fechar=()=>{limparUrls();screen.remove();abrirObra(leitorEstado.obra?.id)};
+  screen.querySelector("#lvnClose").onclick=fechar;
+  screen._anagaCleanup=()=>{limparUrls()};
+  screen.querySelector("#lvnClose").focus();
+
+  let zipBlob=offlineBlob;
+  if(!zipBlob){
+    try{
+      const r=await fetch(c.arquivo_url,{cache:"no-store"});
+      if(!r.ok)throw Error("Não foi possível baixar o ZIP da Light Novel.");
+      zipBlob=await r.blob();
+    }catch(e){
+      throw Error("Esta Light Novel não está guardada offline. Liga a internet e toca em GUARDAR OFFLINE primeiro.");
+    }
+  }
+  const zip=await JSZip.loadAsync(zipBlob);
+  const entries=Object.keys(zip.files).filter(n=>!zip.files[n].dir);
+  const htmlEntries=entries.filter(lvnIsHtml);
+  const hf=htmlEntries.find(n=>lvnChave(n)==="index.html")||htmlEntries.find(n=>/index/i.test(n))||htmlEntries[0];
+  if(!hf)throw Error("O ZIP não contém nenhum arquivo HTML.");
+
+  // 1) Criar URLs para todos os recursos binários/textuais que o navegador consegue consumir.
+  const urls={};
+  for(const n of entries){
+   if(lvnIsHtml(n))continue;
+   const mime=lvnAssetMime(n);
+   if(!mime)continue;
+   const data=await zip.files[n].async("arraybuffer");
+   const u=URL.createObjectURL(new Blob([data],{type:mime}));
+   urls[lvnChave(n)]=u;assetUrls.push(u);
+  }
+
+  // 2) CSS é processado a partir do caminho do próprio .css.
+  // Isso corrige imagens, fontes e @import que ficam em subpastas do ZIP.
+  const cssTexts={};
+  for(const n of entries){
+   if(String(ext(n)||"").toLowerCase()!=="css")continue;
+   const css=await zip.files[n].async("text");
+   const pronto=lvnRewriteCss(css,n,urls);
+   const u=URL.createObjectURL(new Blob([pronto],{type:"text/css;charset=utf-8"}));
+   const old=urls[lvnChave(n)];
+   if(old)try{URL.revokeObjectURL(old)}catch(_){ }
+   urls[lvnChave(n)]=u;assetUrls.push(u);
+   cssTexts[lvnChave(n)]=pronto;
+  }
+
+  // 3) Parsear e corrigir TODOS os HTMLs do ZIP, cada um usando seu próprio caminho-base.
+  const docs={};
+  for(const n of htmlEntries){
+   const doc=new DOMParser().parseFromString(await zip.files[n].async("text"),"text/html");
+   doc.querySelectorAll("base").forEach(x=>x.remove());
+   const rewriteResource=(el,attr)=>{
+    const raw=el.getAttribute(attr);if(!raw||lvnRefEspecial(raw))return;
+    const u=lvnFindUrl(urls,lvnResolver(n,raw));if(u)el.setAttribute(attr,u);
+   };
+   doc.querySelectorAll("img[src],source[src],input[src],audio[src],video[src],track[src],iframe[src],object[data],embed[src]").forEach(el=>{
+    const attr=el.hasAttribute("data")?"data":"src";rewriteResource(el,attr);
+   });
+   doc.querySelectorAll("video[poster]").forEach(el=>rewriteResource(el,"poster"));
+   doc.querySelectorAll("link[href]").forEach(el=>{
+    const raw=el.getAttribute("href");if(!raw||lvnRefEspecial(raw))return;
+    const u=lvnFindUrl(urls,lvnResolver(n,raw));if(u)el.setAttribute("href",u);
+   });
+   doc.querySelectorAll("style").forEach(el=>el.textContent=lvnRewriteCss(el.textContent,n,urls));
+   doc.querySelectorAll("[style]").forEach(el=>el.setAttribute("style",lvnRewriteCss(el.getAttribute("style"),n,urls)));
+   doc.querySelectorAll("img[srcset],source[srcset]").forEach(el=>el.setAttribute("srcset",lvnRewriteSrcset(el.getAttribute("srcset"),n,urls)));
+   doc.querySelectorAll("script[src]").forEach(el=>rewriteResource(el,"src"));
+   // O texto alternativo e o título continuam intactos; links externos também.
+   docs[lvnChave(n)]={doc,n};
+  }
+
+  // 4) Criar uma URL para cada HTML já corrigido.
+  // Primeiro usamos marcadores; depois substituímos os links internos pelos Blobs reais.
+  const htmlUrls={};
+  const marcador=(key)=>`__ANAGA_HTML_${encodeURIComponent(key)}__`;
+  for(const {doc,n} of Object.values(docs)){
+   doc.querySelectorAll("a[href],area[href]").forEach(el=>{
+    const raw=el.getAttribute("href");
+    if(!raw||lvnRefEspecial(raw))return;
+    const h=lvnHashHref(raw),target=docs[lvnChave(lvnResolver(n,h.path))];
+    if(target)el.setAttribute("href",marcador(lvnChave(target.n))+h.hash);
+   });
+   const text="<!DOCTYPE html>"+doc.documentElement.outerHTML;
+   const u=URL.createObjectURL(new Blob([text],{type:"text/html;charset=utf-8"}));
+   htmlUrls[lvnChave(n)]=u;assetUrls.push(u);
+  }
+
+  // 5) Regenerar os HTMLs para trocar os marcadores pelos Blob URLs definitivos.
+  // Como URLs Blob são independentes do caminho do ZIP, os links continuam funcionando.
+  const htmlFinalUrls={};
+  for(const {doc,n} of Object.values(docs)){
+   const oldUrl=htmlUrls[lvnChave(n)];
+   doc.querySelectorAll("a[href],area[href]").forEach(el=>{
+    const raw=el.getAttribute("href")||"";
+    const m=raw.match(/^__ANAGA_HTML_(.+?)__(#[^]*)?$/);
+    if(m){
+     let key;try{key=decodeURIComponent(m[1])}catch(_){key=m[1]}
+     const u=htmlUrls[key];if(u)el.setAttribute("href",u+(m[2]||""));
+    }
+   });
+   const text="<!DOCTYPE html>"+doc.documentElement.outerHTML;
+   const u=URL.createObjectURL(new Blob([text],{type:"text/html;charset=utf-8"}));
+   htmlFinalUrls[lvnChave(n)]=u;assetUrls.push(u);
+   try{URL.revokeObjectURL(oldUrl)}catch(_){ }
+  }
+
+  htmlUrl=htmlFinalUrls[lvnChave(hf)];
+  frame.setAttribute("sandbox","allow-scripts allow-forms allow-modals allow-popups allow-same-origin");
+  frame.src=htmlUrl;
+  frame.addEventListener("load",()=>{
+   try{frame.contentWindow.scrollTo(0,0)}catch(_){ }
+  },{once:true});
+ }catch(e){
+  console.error("ANAGA Light Novel:",e);
+  limparUrls();
+  if(screen)screen.innerHTML=`<div style="height:100%;box-sizing:border-box;background:#080608;color:#fff;padding:25px;font-family:Arial,sans-serif;overflow:auto"><h2 style="color:#ff00aa">Erro ao abrir a Light Novel</h2><p style="margin-top:15px;line-height:1.6">${escapar(e.message||"Erro desconhecido")}</p><button id="lvnErrorBack" type="button" style="margin-top:20px;border:1px solid #ff00aa;background:#160b15;color:#fff;border-radius:9px;padding:10px 14px;cursor:pointer">← VOLTAR</button></div>`;
+  if(screen){const b=screen.querySelector("#lvnErrorBack");if(b)b.onclick=()=>{screen.remove();abrirObra(leitorEstado.obra?.id)}}
+ }
+}
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){const s=$("lvnScreen");if(s){if(s._anagaCleanup)s._anagaCleanup();s.remove();abrirObra(leitorEstado.obra?.id)}}});
+
+function previewCapa(e){let f=e.target.files[0];capaArquivo=f||null;if(f){let r=new FileReader();r.onload=x=>{$("capaPreview").src=x.target.result;$("capaPreview").style.display="block"};r.readAsDataURL(f)}}
+function gerarSlotsPaginas(){
+ let n=Number($("quantidadePaginas").value);if(!n||n<1||n>500)return;
+ paginasSelecionadas=Array(n).fill(null);let g=$("pageGrid");g.innerHTML="";
+ for(let i=0;i<n;i++){let d=document.createElement("div");d.className="page-slot";d.innerHTML=`<div class="num">PÁGINA ${i+1}</div><input type="file" accept="image/*" onchange="selecionarPagina(${i},this)"><div id="prev-${i}"></div><div class="page-status" id="status-${i}">Nenhuma imagem.</div>`;g.appendChild(d)}
+ atualizarContadorPaginas()
+}
+function selecionarPagina(i,input){let f=input.files[0];if(!f)return;paginasSelecionadas[i]=f;let prev=$("prev-"+i),r=new FileReader();r.onload=e=>{prev.innerHTML=`<img class="page-preview" src="${e.target.result}">`};r.readAsDataURL(f);$("status-"+i).textContent=f.name;$("status-"+i).parentElement.classList.add("ok");atualizarContadorPaginas()}
+function atualizarContadorPaginas(){let total=Number($("quantidadePaginas").value)||0,ok=paginasSelecionadas.filter(Boolean).length;$("contadorPaginas").textContent=`${ok} / ${total} páginas carregadas`}
+function atualizarTipoCapitulo(){
+ const obraId=Number($("obraCapitulo")?.value);
+ const obra=obras.find(o=>Number(o.id)===obraId);
+ const t=obra?.tipo||"MANGÁ";
+ $("areaManga").style.display=t==="MANGÁ"?"block":"none";
+ $("areaLightNovel").style.display=t==="MANGÁ"?"none":"block";
+}
+async function publicarObra(){
+ if(!administrador)return toast("Acesso negado.");let titulo=$("tituloObra").value.trim(),tipo=$("tipoObra").value,autor=$("autorObra").value.trim(),genero=$("generoObra").value.trim(),desc=$("descricaoObra").value.trim();if(!titulo)return toast("Digite o título.");
+ try{let capa=null;if(capaArquivo){mostrarProgresso("progressoCapa",30,"Enviando capa...");capa=await uploadArquivo(capaArquivo,"capas/"+uid()+"."+ext(capaArquivo.name))}let {error}=await supabaseClient.from("obras").insert({titulo,tipo,autor:autor||"ANAGA",genero:genero||"Não definido",descricao:desc||"Sem descrição.",capa_url:capa,publicada:true});if(error)throw error;limparFormulario();await carregarObras();toast("Obra publicada com sucesso!")}catch(e){console.error(e);toast(e.message||"Erro ao publicar obra.")}finally{esconderProgresso("progressoCapa")}}
+function limparFormulario(){["tituloObra","autorObra","generoObra","descricaoObra","capaObra"].forEach(id=>$(id).value="");$("capaPreview").style.display="none";capaArquivo=null}
+
+async function adicionarCapitulo(){
+ if(!administrador)return toast("Acesso negado.");
+ let obraId=Number($("obraCapitulo").value),numero=Number($("numeroCapitulo").value),titulo=$("tituloCapitulo").value.trim(),conteudo=$("conteudoCapitulo").value,obra=obras.find(o=>Number(o.id)===obraId);
+ if(!obra)return toast("Selecione uma obra.");if(!numero)return toast("Digite o número.");if((obra.capitulos||[]).some(c=>Number(c.numero)===numero))return toast("Esse número de capítulo já existe nesta obra.");atualizarTipoCapitulo();
+ let cap=null,paths=[];
+ try{
+  if(obra.tipo==="MANGÁ"){let total=Number($("quantidadePaginas").value),ok=paginasSelecionadas.filter(Boolean).length;if(!total)return toast("Define a quantidade exata de páginas.");if(ok!==total)return toast(`Faltam páginas: ${ok} de ${total}.`)}
+  else if(!$("arquivoNovel").files[0])return toast("Selecione o ZIP da Light Novel.");
+  let q={obra_id:obraId,numero,titulo:titulo||"Capítulo "+numero,conteudo:conteudo||null,arquivo_url:null};let ins=await supabaseClient.from("capitulos").insert(q).select().single();if(ins.error)throw ins.error;cap=ins.data;
+  if(obra.tipo==="MANGÁ"){
+   for(let i=0;i<paginasSelecionadas.length;i++){let f=paginasSelecionadas[i],path=`mangas/${obraId}/${cap.id}/${pad(i+1)}.${ext(f.name)}`;paths.push(path);mostrarProgresso("progressoCapitulo",Math.round(i/paginasSelecionadas.length*100),`Enviando página ${i+1} de ${paginasSelecionadas.length}`);let url=await uploadArquivo(f,path),r=await supabaseClient.from("paginas").insert({capitulo_id:cap.id,ordem:i+1,imagem_url:url});if(r.error)throw r.error}
+  }else{let f=$("arquivoNovel").files[0],path=`novels/${obraId}/${cap.id}/${f.name}`;paths.push(path);mostrarProgresso("progressoCapitulo",50,"Enviando Light Novel...");let url=await uploadArquivo(f,path),r=await supabaseClient.from("capitulos").update({arquivo_url:url}).eq("id",cap.id);if(r.error)throw r.error}
+  mostrarProgresso("progressoCapitulo",100,"Capítulo adicionado.");await carregarObras();limparCapituloFormulario();toast("Capítulo adicionado com sucesso!")
+ }catch(e){console.error(e);if(cap){try{await supabaseClient.from("paginas").delete().eq("capitulo_id",cap.id)}catch(_){}try{await supabaseClient.from("capitulos").delete().eq("id",cap.id)}catch(_){}}if(paths.length)try{await supabaseClient.storage.from(BUCKET).remove(paths)}catch(_){}toast(e.message||"Erro ao adicionar capítulo.")}finally{setTimeout(()=>esconderProgresso("progressoCapitulo"),1200)}
+}
+function limparCapituloFormulario(){["numeroCapitulo","tituloCapitulo","conteudoCapitulo","quantidadePaginas","arquivoNovel"].forEach(id=>$(id).value="");paginasSelecionadas=[];$("pageGrid").innerHTML="";$("contadorPaginas").textContent="0 / 0 páginas carregadas";$("nomeNovel").textContent=""}
+
+let adminFiltroTipo="TODAS",adminTabAtual="dashboard";
+function abrirAdminTab(tab){
+ if(!administrador)return toast("Acesso negado.");
+ adminTabAtual=tab;
+ document.querySelectorAll(".admin-tab").forEach(x=>x.classList.add("hidden"));
+ const alvo=$("adminTab"+tab.charAt(0).toUpperCase()+tab.slice(1));if(alvo)alvo.classList.remove("hidden");
+ document.querySelectorAll(".admin-op").forEach(x=>x.classList.toggle("active",x.dataset.adminTab===tab));
+ if(tab==="dashboard")renderAdminDashboard();
+ if(tab==="obras")renderAdminObras();
+ if(tab==="capitulos")renderAdminCapitulos();
+ if(tab==="paginas")prepararAdminPaginas();
+ if(tab==="novel")prepararAdminNovels();
+ if(tab==="usuarios")carregarAdminUsuarios();
+ if(tab==="config")renderAdminConfig();
+}
+function definirFiltroAdmin(tipo){adminFiltroTipo=tipo;renderAdminObras()}
+function renderAdminDashboard(){
+ const total=obras.length,m=obras.filter(o=>o.tipo==="MANGÁ").length,n=obras.filter(o=>o.tipo==="LIGHT NOVEL").length;
+ const caps=obras.reduce((a,o)=>a+(o.capitulos?.length||0),0);
+ $("adminResumo").innerHTML=`<div><strong>${total}</strong><span>Obras cadastradas</span></div><div><strong>${caps}</strong><span>Capítulos</span></div><div><strong>${m+n?Math.round(caps/(m+n)):0}</strong><span>Média capítulos/obra</span></div>`;
+ $("adminRecentes").innerHTML=obras.slice(0,5).map(o=>`<div class="admin-row"><div class="admin-row-main"><div><strong>${escapar(o.titulo)}</strong><br><span>${escapar(o.tipo)} • ${o.capitulos?.length||0} capítulos</span></div><button class="btn btn-dark btn-small" onclick="editarObra(${o.id})">EDITAR</button></div></div>`).join("")||'<div class="empty">Nenhuma obra.</div>';
+}
+function renderAdminObras(){
+ const box=$("adminObras");if(!box)return;
+ const q=($("adminPesquisaObras")?.value||"").toLowerCase().trim();
+ const lista=obras.filter(o=>(adminFiltroTipo==="TODAS"||o.tipo===adminFiltroTipo)&&(!q||[o.titulo,o.autor,o.genero].join(" ").toLowerCase().includes(q)));
+ box.innerHTML=lista.map(o=>`<div class="admin-row"><div class="admin-row-main"><div><strong>${escapar(o.titulo)}</strong><br><span>${escapar(o.tipo)} • ${o.capitulos?.length||0} capítulos</span></div><span class="type">${o.publicada===false?"RASCUNHO":"PUBLICADA"}</span></div><div class="admin-actions"><button class="btn btn-dark btn-small" onclick="abrirObra(${o.id})">VER</button><button class="btn btn-dark btn-small" onclick="editarObra(${o.id})">✏️ EDITAR</button><button class="btn btn-primary btn-small" onclick="abrirAdminCapitulosObra(${o.id})">📖 CAPÍTULOS</button><button class="btn btn-danger btn-small" onclick="excluirObra(${o.id})">🗑️ EXCLUIR</button></div></div>`).join("")||'<div class="empty">Nenhuma obra encontrada.</div>';
+}
+function abrirAdminCapitulosObra(id){
+ abrirAdminTab("capitulos");
+ const sel=$("obraCapitulo");
+ if(!sel)return;
+ sel.value=id;
+ atualizarTipoCapitulo();
+ renderAdminCapitulos();
+}
+function renderAdminCapitulos(){
+ const id=Number($("obraCapitulo")?.value),o=obras.find(x=>Number(x.id)===id),box=$("adminCapitulosLista");if(!box)return;
+ if(!o){box.innerHTML='<div class="empty">Nenhuma obra selecionada.</div>';return}
+ box.innerHTML=(o.capitulos||[]).sort((a,b)=>Number(a.numero)-Number(b.numero)).map(c=>`<div class="admin-row"><div class="admin-row-main"><div><strong>Cap. ${c.numero} — ${escapar(c.titulo||"")}</strong><br><span>${o.tipo}${c.arquivo_url?" • ZIP":""}${c.paginas?.length?" • "+c.paginas.length+" páginas":""}</span></div><div class="admin-actions"><button class="btn btn-dark btn-small" onclick="editarCapitulo(${c.id},${o.id})">✏️ EDITAR</button>${o.tipo==="MANGÁ"?`<button class="btn btn-dark btn-small" onclick="abrirAdminPaginasCap(${o.id},${c.id})">🖼️ PÁGINAS</button>`:""}<button class="btn btn-danger btn-small" onclick="excluirCapitulo(${c.id},${o.id})">🗑️ EXCLUIR</button></div></div></div>`).join("")||'<div class="empty">Esta obra ainda não tem capítulos.</div>';
+}
+function prepararAdminPaginas(){
+ const s=$("obraPaginas");if(!s)return;s.innerHTML=obras.filter(o=>o.tipo==="MANGÁ").map(o=>`<option value="${o.id}">${escapar(o.titulo)}</option>`).join("");carregarAdminPaginas();
+}
+function abrirAdminPaginasCap(obraId,capId){
+ abrirAdminTab("paginas");
+ const obraSel=$("obraPaginas"),capSel=$("capituloPaginas");
+ if(!obraSel||!capSel)return;
+ obraSel.value=obraId;
+ carregarAdminPaginas();
+ capSel.value=capId;
+ carregarAdminPaginas();
+}
+function carregarAdminPaginas(){
+ const o=obras.find(x=>Number(x.id)===Number($("obraPaginas")?.value)),sel=$("capituloPaginas"),box=$("adminPaginasLista");if(!sel||!box)return;
+ const todos=(o?.capitulos||[]).filter(c=>Array.isArray(c.paginas)&&c.paginas.length);
+ const valorAtual=sel.value;
+ sel.innerHTML=todos.map(c=>`<option value="${c.id}">Capítulo ${c.numero} — ${escapar(c.titulo||"")}</option>`).join("");
+ const c=todos.find(x=>Number(x.id)===Number(valorAtual))||todos[0];
+ if(c)sel.value=c.id;
+ box.innerHTML=(c?.paginas||[]).map((p,i)=>`<div class="page-admin-card"><img src="${escapar(p.imagem_url||"")}" alt="Página ${i+1}"><small>Página ${p.ordem||i+1}</small><input type="file" accept="image/*" onchange="substituirPagina(${p.id},${c.id},${o.id},this)"><button class="btn btn-danger btn-small" style="width:100%;margin-top:6px" onclick="excluirPagina(${p.id},${c.id},${o.id})">EXCLUIR</button></div>`).join("")||'<div class="empty">Nenhuma página neste capítulo.</div>';
+}
+function prepararAdminNovels(){const s=$("obraNovelAdmin");if(!s)return;s.innerHTML=obras.filter(o=>o.tipo==="LIGHT NOVEL").map(o=>`<option value="${o.id}">${escapar(o.titulo)}</option>`).join("");carregarAdminNovels()}
+function carregarAdminNovels(){const o=obras.find(x=>Number(x.id)===Number($("obraNovelAdmin")?.value)),box=$("adminNovelsLista");if(!box)return;box.innerHTML=(o?.capitulos||[]).map(c=>`<div class="admin-novel"><div><strong>Cap. ${c.numero} — ${escapar(c.titulo||"")}</strong><br><span style="color:#888;font-size:11px">${c.arquivo_url?"ZIP disponível":"Sem ZIP"}</span></div><div class="admin-actions" style="margin-top:0"><button class="btn btn-dark btn-small" onclick="substituirNovel(${c.id},${o.id})">📦 SUBSTITUIR ZIP</button><button class="btn btn-dark btn-small" onclick="editarCapitulo(${c.id},${o.id})">✏️ EDITAR</button><button class="btn btn-danger btn-small" onclick="excluirCapitulo(${c.id},${o.id})">EXCLUIR</button></div></div>`).join("")||'<div class="empty">Nenhum capítulo.</div>'}
+let adminUsuarios=[];
+async function carregarAdminUsuarios(){
+ if(!administrador)return toast("Acesso negado.");
+ const box=$("adminUsuariosLista");if(box)box.innerHTML='<div class="loading">A carregar utilizadores...</div>';
+ try{
+   const r=await supabaseClient.from("perfis").select("id,nome").order("nome",{ascending:true});
+   if(r.error)throw r.error;
+   const a=await supabaseClient.from("administradores").select("id,administrador");
+   if(a.error)throw a.error;
+   const mapa=new Map((a.data||[]).map(x=>[String(x.id),x.administrador===true]));
+   adminUsuarios=(r.data||[]).map(x=>({id:x.id,nome:x.nome||"Sem nome",admin:mapa.get(String(x.id))===true}));
+   renderAdminUsuarios();
+ }catch(e){console.error(e);if(box)box.innerHTML='<div class="empty">Não foi possível carregar os utilizadores.</div>';toast(e.message||"Erro ao carregar utilizadores.")}
+}
+function renderAdminUsuarios(){
+ const box=$("adminUsuariosLista");if(!box)return;
+ const q=($("adminPesquisaUsuarios")?.value||"").toLowerCase().trim();
+ const lista=adminUsuarios.filter(u=>!q||`${u.nome} ${u.id}`.toLowerCase().includes(q));
+ box.innerHTML=lista.map(u=>`<div class="admin-row admin-user"><div class="admin-user-main"><strong>${escapar(u.nome)}</strong><span>ID: ${escapar(String(u.id))}</span></div><span class="type admin-user-badge">${u.admin?"ADMINISTRADOR":"UTILIZADOR"}</span></div>`).join("")||'<div class="empty">Nenhum utilizador encontrado.</div>';
+}
+function renderAdminConfig(){
+ const sess=$("adminConfigSessao"),amb=$("adminConfigAmbiente");
+ if(sess){const nome=usuarioAtual?.user_metadata?.nome||usuarioAtual?.email?.split("@")[0]||"Administrador";sess.textContent=`Sessão iniciada como ${nome}. ${usuarioAtual?.email||""}`.trim()}
+ if(amb){amb.textContent=`Supabase ligado • ${obras.length} obras carregadas • ${location.protocol}//${location.host||"aplicação local"}`}
+}
+async function sincronizarAdmin(){
+ if(!administrador)return toast("Acesso negado.");
+ toast("A atualizar dados...");
+ await carregarObras();
+ if(adminTabAtual==="usuarios")await carregarAdminUsuarios();
+ if(adminTabAtual==="config")renderAdminConfig();
+ toast("Dados atualizados.");
+}
+async function limparDadosOfflineAdmin(){
+ if(!confirm("Limpar todas as obras guardadas offline neste dispositivo? Esta ação não elimina dados do servidor."))return;
+ try{
+   const db=await dbOpen();
+   await new Promise((res,rej)=>{const tx=db.transaction(STORE,"readwrite");tx.objectStore(STORE).clear();tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error)});
+   toast("Dados offline limpos neste dispositivo.");
+ }catch(e){console.error(e);toast(e.message||"Erro ao limpar dados offline.")}
+}
+async function editarCapitulo(id,obraId){
+ if(!administrador)return toast("Acesso negado.");
+ const o=obras.find(x=>Number(x.id)===Number(obraId)),c=o?.capitulos?.find(x=>Number(x.id)===Number(id));
+ if(!c)return toast("Capítulo não encontrado.");
+ $("adminCapEditId").value=c.id;$("adminCapEditObraId").value=o.id;$("adminCapEditNumero").value=c.numero||1;$("adminCapEditTitulo").value=c.titulo||"";$("adminCapEditConteudo").value=c.conteudo||"";$("adminCapModal").classList.add("open");
+}
+function fecharEditarCapitulo(){$("adminCapModal")?.classList.remove("open")}
+async function guardarEdicaoCapitulo(){
+ if(!administrador)return toast("Acesso negado.");
+ const id=Number($("adminCapEditId").value),obraId=Number($("adminCapEditObraId").value),numero=Number($("adminCapEditNumero").value),titulo=$("adminCapEditTitulo").value.trim(),conteudo=$("adminCapEditConteudo").value;
+ if(!numero)return toast("Digite o número do capítulo.");if(!titulo)return toast("Digite o título do capítulo.");
+ try{const r=await supabaseClient.from("capitulos").update({numero,titulo,conteudo:conteudo||null}).eq("id",id);if(r.error)throw r.error;toast("Capítulo atualizado.");fecharEditarCapitulo();await carregarObras();$("obraCapitulo").value=obraId;renderAdminCapitulos()}catch(e){toast(e.message||"Erro ao atualizar capítulo.")}
+}
+function abrirAdicionarPaginas(){
+ const obraId=Number($("obraPaginas")?.value),capId=Number($("capituloPaginas")?.value),o=obras.find(x=>Number(x.id)===obraId),c=o?.capitulos?.find(x=>Number(x.id)===capId);
+ if(!o||!c)return toast("Selecione uma obra e um capítulo.");
+ $("adminPaginasObraId").value=o.id;$("adminPaginasCapId").value=c.id;$("adminPaginasInfo").textContent=`${o.titulo} • Capítulo ${c.numero}. As novas páginas serão adicionadas após a última página.`;$("adminPaginasFiles").value="";$("adminPaginasPreview").innerHTML="";$("adminPaginasModal").classList.add("open");
+}
+function fecharAdicionarPaginas(){$("adminPaginasModal")?.classList.remove("open")}
+$("adminPaginasFiles")?.addEventListener("change",e=>{const box=$("adminPaginasPreview");box.innerHTML="";Array.from(e.target.files||[]).forEach((f,i)=>{const d=document.createElement("div");d.className="page-admin-card";const im=document.createElement("img");im.alt=`Nova página ${i+1}`;const sm=document.createElement("small");sm.textContent=f.name;d.append(im,sm);box.appendChild(d);const r=new FileReader();r.onload=x=>im.src=x.target.result;r.readAsDataURL(f)})});
+async function guardarNovasPaginas(){
+ if(!administrador)return toast("Acesso negado.");const obraId=Number($("adminPaginasObraId").value),capId=Number($("adminPaginasCapId").value),o=obras.find(x=>Number(x.id)===obraId),c=o?.capitulos?.find(x=>Number(x.id)===capId),files=Array.from($("adminPaginasFiles").files||[]);
+ if(!o||!c)return toast("Capítulo inválido.");if(o.tipo!=="MANGÁ")return toast("Apenas mangás têm páginas.");if(!files.length)return toast("Selecione pelo menos uma imagem.");
+ let inseridas=[];try{let ordem=Math.max(0,...(c.paginas||[]).map(p=>Number(p.ordem)||0));for(let i=0;i<files.length;i++){const f=files[i],novaOrdem=ordem+i+1,path=`mangas/${obraId}/${capId}/${pad(novaOrdem)}.${ext(f.name)}`;mostrarProgresso("progressoAdminPaginas",Math.round(i/files.length*100),`Enviando página ${i+1} de ${files.length}`);const url=await uploadArquivo(f,path);let r=await supabaseClient.from("paginas").insert({capitulo_id:capId,ordem:novaOrdem,imagem_url:url}).select().single();if(r.error){try{await supabaseClient.storage.from(BUCKET).remove([path])}catch(_){}throw r.error}inseridas.push({row:r.data,path})}mostrarProgresso("progressoAdminPaginas",100,"Páginas adicionadas.");toast("Páginas adicionadas com sucesso.");fecharAdicionarPaginas();await carregarObras();abrirAdminTab("paginas");const obraSel=$("obraPaginas"),capSel=$("capituloPaginas");if(obraSel){obraSel.value=obraId;carregarAdminPaginas()}if(capSel){capSel.value=capId;carregarAdminPaginas()}}catch(e){for(const x of inseridas){try{await supabaseClient.from("paginas").delete().eq("id",x.row.id);await supabaseClient.storage.from(BUCKET).remove([x.path])}catch(_){}}toast(e.message||"Erro ao adicionar páginas.")}finally{setTimeout(()=>esconderProgresso("progressoAdminPaginas"),900)}}
+function substituirNovel(id,obraId){
+ if(!administrador)return toast("Acesso negado.");const o=obras.find(x=>Number(x.id)===Number(obraId)),c=o?.capitulos?.find(x=>Number(x.id)===Number(id));if(!o||!c)return toast("Capítulo não encontrado.");$("adminNovelEditId").value=id;$("adminNovelEditObraId").value=obraId;$("adminNovelInfo").textContent=`${o.titulo} • Capítulo ${c.numero}. O novo ZIP substituirá o arquivo atual.`;$("adminNovelFile").value="";$("adminNovelModal").classList.add("open");
+}
+function fecharSubstituirNovel(){$("adminNovelModal")?.classList.remove("open")}
+async function guardarSubstituirNovel(){
+ if(!administrador)return toast("Acesso negado.");const id=Number($("adminNovelEditId").value),obraId=Number($("adminNovelEditObraId").value),o=obras.find(x=>Number(x.id)===obraId),c=o?.capitulos?.find(x=>Number(x.id)===id),f=$("adminNovelFile").files[0];if(!o||!c||!f)return toast("Selecione um ZIP.");
+ try{const path=`novels/${obraId}/${id}/${f.name}`;mostrarProgresso("progressoAdminNovel",30,"Enviando novo ZIP...");const url=await uploadArquivo(f,path);mostrarProgresso("progressoAdminNovel",80,"A guardar referência...");const r=await supabaseClient.from("capitulos").update({arquivo_url:url}).eq("id",id);if(r.error)throw r.error;if(c.arquivo_url){const a=c.arquivo_url.split("/storage/v1/object/public/"+BUCKET+"/");if(a[1]&&decodeURIComponent(a[1])!==path)try{await supabaseClient.storage.from(BUCKET).remove([decodeURIComponent(a[1])])}catch(_){} }mostrarProgresso("progressoAdminNovel",100,"ZIP substituído.");toast("Light Novel atualizada.");fecharSubstituirNovel();await carregarObras();abrirAdminTab("novel")}catch(e){toast(e.message||"Erro ao substituir ZIP.")}finally{setTimeout(()=>esconderProgresso("progressoAdminNovel"),900)}}
+
+let adminEditCapaArquivo=null;
+function editarObra(id){
+ const o=obras.find(x=>Number(x.id)===Number(id));if(!o)return;
+ adminEditCapaArquivo=null;
+ $("adminEditId").value=o.id;$("adminEditTitulo").value=o.titulo||"";$("adminEditAutor").value=o.autor||"";$("adminEditGenero").value=o.genero||"";$("adminEditTipo").value=o.tipo||"MANGÁ";$("adminEditDescricao").value=o.descricao||"";$("adminEditPublicada").value=o.publicada===false?"false":"true";$("adminEditCapa").value="";$("adminEditCapaStatus").textContent="Nenhuma nova capa selecionada.";$("adminEditCapaAtual").src=o.capa_url||"";
+ $("adminEditModal").classList.add("open");setTimeout(()=>$("adminEditTitulo").focus(),50);
+}
+function fecharEditarObra(){$("adminEditModal")?.classList.remove("open");adminEditCapaArquivo=null}
+function previewCapaEdicao(e){const f=e.target.files[0];adminEditCapaArquivo=f||null;if(!f){$("adminEditCapaStatus").textContent="Nenhuma nova capa selecionada.";return}$("adminEditCapaStatus").textContent=f.name;const r=new FileReader();r.onload=x=>$("adminEditCapaAtual").src=x.target.result;r.readAsDataURL(f)}
+async function guardarEdicaoObra(){
+ if(!administrador)return toast("Acesso negado.");const id=Number($("adminEditId").value),o=obras.find(x=>Number(x.id)===id);if(!o)return;
+ const titulo=$("adminEditTitulo").value.trim(),autor=$("adminEditAutor").value.trim(),genero=$("adminEditGenero").value.trim(),descricao=$("adminEditDescricao").value.trim(),tipo=$("adminEditTipo").value,publicada=$("adminEditPublicada").value==="true";if(!titulo)return toast("Digite o título da obra.");
+ try{let capa=o.capa_url||null;if(adminEditCapaArquivo){mostrarProgresso("progressoEdicaoObra",25,"Enviando nova capa...");capa=await uploadArquivo(adminEditCapaArquivo,"capas/"+uid()+"."+ext(adminEditCapaArquivo.name));if(o.capa_url){const a=o.capa_url.split("/storage/v1/object/public/"+BUCKET+"/");if(a[1])try{await supabaseClient.storage.from(BUCKET).remove([decodeURIComponent(a[1])])}catch(_){} }}mostrarProgresso("progressoEdicaoObra",70,"A guardar alterações...");const r=await supabaseClient.from("obras").update({titulo,autor:autor||"ANAGA",genero:genero||"Não definido",descricao:descricao||"Sem descrição.",tipo,publicada,capa_url:capa}).eq("id",id);if(r.error)throw r.error;mostrarProgresso("progressoEdicaoObra",100,"Alterações guardadas.");toast("Obra atualizada com sucesso.");fecharEditarObra();await carregarObras();abrirAdminTab("obras")}catch(e){console.error(e);toast(e.message||"Erro ao atualizar obra.")}finally{setTimeout(()=>esconderProgresso("progressoEdicaoObra"),900)}
+}
+async function excluirObra(id){
+ if(!administrador)return toast("Acesso negado.");const o=obras.find(x=>Number(x.id)===Number(id));if(!o)return;if(!confirm(`Excluir a obra "${o.titulo}" e os seus capítulos? Esta operação não pode ser desfeita.`))return;
+ try{for(const c of (o.capitulos||[])){await excluirCapituloBancoCompleto(c,o.id)}const r=await supabaseClient.from("obras").delete().eq("id",id);if(r.error)throw r.error;toast("Obra excluída.");await carregarObras();abrirAdminTab("obras")}catch(e){toast(e.message||"Erro ao excluir obra.")}
+}
+async function excluirCapituloBancoCompleto(c,obraId){
+ if(c.paginas?.length){
+  const paths=c.paginas.map(p=>{const u=p.imagem_url||"";const m=u.split("/storage/v1/object/public/"+BUCKET+"/")[1];return m||null}).filter(Boolean);
+  if(paths.length)try{const sr=await supabaseClient.storage.from(BUCKET).remove(paths);if(sr.error)throw sr.error}catch(e){console.warn("Falha ao remover imagens do capítulo:",e)}
+  const pr=await supabaseClient.from("paginas").delete().eq("capitulo_id",c.id);
+  if(pr.error)throw pr.error;
+ }
+ if(c.arquivo_url){
+  const parts=c.arquivo_url.split("/storage/v1/object/public/"+BUCKET+"/");
+  if(parts[1])try{const sr=await supabaseClient.storage.from(BUCKET).remove([decodeURIComponent(parts[1])]);if(sr.error)throw sr.error}catch(e){console.warn("Falha ao remover ZIP:",e)}
+ }
+ const cr=await supabaseClient.from("capitulos").delete().eq("id",c.id);
+ if(cr.error)throw cr.error;
+}
+async function excluirCapitulo(id,obraId){if(!confirm("Excluir este capítulo? Esta operação não pode ser desfeita."))return;try{const o=obras.find(x=>Number(x.id)===Number(obraId)),c=o?.capitulos?.find(x=>Number(x.id)===Number(id));if(c)await excluirCapituloBancoCompleto(c,obraId);toast("Capítulo excluído.");await carregarObras();abrirAdminTab(adminTabAtual)}catch(e){toast(e.message||"Erro ao excluir capítulo.")}}
+async function substituirPagina(id,capId,obraId,input){
+ if(!administrador)return toast("Acesso negado.");
+ const f=input?.files?.[0];if(!f)return;
+ const o=obras.find(x=>Number(x.id)===Number(obraId)),c=o?.capitulos?.find(x=>Number(x.id)===Number(capId)),p=c?.paginas?.find(x=>Number(x.id)===Number(id));
+ if(!o||!c||!p)return toast("Página não encontrada.");
+ const ordem=Number(p.ordem)||1;
+ const path=`mangas/${obraId}/${capId}/${pad(ordem)}.${ext(f.name)}`;
+ const oldUrl=p.imagem_url||"";
+ try{
+  mostrarProgresso("progressoAdminPaginas",30,`Substituindo página ${ordem}...`);
+  const url=await uploadArquivo(f,path);
+  const r=await supabaseClient.from("paginas").update({imagem_url:url}).eq("id",id);
+  if(r.error)throw r.error;
+  if(oldUrl){
+   const parts=oldUrl.split("/storage/v1/object/public/"+BUCKET+"/");
+   if(parts[1]){
+    const oldPath=decodeURIComponent(parts[1]);
+    if(oldPath!==path)try{await supabaseClient.storage.from(BUCKET).remove([oldPath])}catch(_){}
+   }
+  }
+  mostrarProgresso("progressoAdminPaginas",100,`Página ${ordem} substituída.`);
+  toast("Página substituída.");
+  await carregarObras();
+  abrirAdminTab("paginas");
+  const s=$("obraPaginas");if(s)s.value=obraId;
+  carregarAdminPaginas();
+  const cs=$("capituloPaginas");if(cs){cs.value=capId;carregarAdminPaginas();}
+ }catch(e){
+  console.error(e);
+  toast(e.message||"Erro ao substituir página.");
+ }finally{
+  setTimeout(()=>esconderProgresso("progressoAdminPaginas"),900);
+ }
+}
+async function excluirPagina(id,capId,obraId){if(!confirm("Excluir esta página?"))return;try{const o=obras.find(x=>Number(x.id)===Number(obraId)),c=o?.capitulos?.find(x=>Number(x.id)===Number(capId)),p=c?.paginas?.find(x=>Number(x.id)===Number(id));if(p?.imagem_url){const a=p.imagem_url.split("/storage/v1/object/public/"+BUCKET+"/");if(a[1])try{await supabaseClient.storage.from(BUCKET).remove([decodeURIComponent(a[1])])}catch(_){} }const r=await supabaseClient.from("paginas").delete().eq("id",id);if(r.error)throw r.error;toast("Página excluída.");await carregarObras();carregarAdminPaginas()}catch(e){toast(e.message||"Erro ao excluir página.")}}
+
+function atualizarAdmin(){
+ $("totalObras").textContent=obras.length;$("totalMangas").textContent=obras.filter(o=>o.tipo==="MANGÁ").length;$("totalNovels").textContent=obras.filter(o=>o.tipo==="LIGHT NOVEL").length;
+ const sel=$("obraCapitulo");if(sel){const atual=sel.value;sel.innerHTML=obras.map(o=>`<option value="${o.id}">${escapar(o.titulo)}${o.publicada===false?" — RASCUNHO":""}</option>`).join("");if(atual&&obras.some(o=>String(o.id)===String(atual)))sel.value=atual;sel.onchange=()=>{atualizarTipoCapitulo();renderAdminCapitulos()};atualizarTipoCapitulo()}
+ if(adminTabAtual==="dashboard")renderAdminDashboard();if(adminTabAtual==="obras")renderAdminObras();if(adminTabAtual==="capitulos")renderAdminCapitulos();if(adminTabAtual==="config")renderAdminConfig();
+}
+
+/* Offline: guarda páginas reais no IndexedDB. O ZIP continua disponível como exportação. */
+const DBNAME="ANAGA_OFFLINE",STORE="obras",DBVERSION=2;
+function dbOpen(){return new Promise((res,rej)=>{
+ let r=indexedDB.open(DBNAME,DBVERSION);
+ r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains(STORE))r.result.createObjectStore(STORE,{keyPath:"id"})};
+ r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)
+})}
+async function dbPut(obj){let db=await dbOpen();return new Promise((res,rej)=>{
+ let tx=db.transaction(STORE,"readwrite");tx.objectStore(STORE).put(obj);tx.oncomplete=res;tx.onerror=()=>rej(tx.error)
+})}
+async function dbGet(id){let db=await dbOpen();return new Promise((res,rej)=>{
+ let r=db.transaction(STORE).objectStore(STORE).get(Number(id));r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)
+})}
+function downloadUI(titulo,status,detail,pct){
+  const o=$("downloadOverlay");if(!o)return;
+  o.style.display="flex";$("downloadTitle").textContent=titulo;$("downloadStatus").textContent=status||"";$("downloadDetail").textContent=detail||"";
+  pct=Math.max(0,Math.min(100,Number(pct)||0));$("downloadBar").style.width=pct+"%";$("downloadPercent").textContent=Math.round(pct)+"%";
+}
+function downloadUIClose(delay){setTimeout(()=>{const o=$("downloadOverlay");if(o)o.style.display="none"},delay||1000)}
+async function baixarBlobAndroid(blob,nome){
+  // Primeiro tenta a API de download do navegador/WebView.
+  // A partilha automática foi removida porque ela não garante que o ZIP
+  // seja colocado em "Downloads" no Android.
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download=nome;
+  a.setAttribute("download",nome);
+  a.rel="noopener";
+  a.style.position="fixed";
+  a.style.left="-9999px";
+  document.body.appendChild(a);
+  try{
+    a.dispatchEvent(new MouseEvent("click",{bubbles:true,cancelable:true,view:window}));
+  }catch(e){
+    try{a.click()}catch(err){console.warn("Download bloqueado",err)}
+  }
+  setTimeout(()=>{try{a.remove();URL.revokeObjectURL(url)}catch(_){}},30000);
+  return true;
+}
+async function montarPacoteObra(obra){
+  const zip=new JSZip();let total=0,done=0;
+  for(const c of obra.capitulos||[])total+=obra.tipo==="MANGÁ"?(c.paginas||[]).length:(c.arquivo_url||c.arquivo_blob?1:0);
+  const tick=(s,d)=>{done++;downloadUI("⬇️ A criar ZIP",s,d,total?done/total*95:95)};
+  zip.file("obra.json",JSON.stringify({id:obra.id,titulo:obra.titulo,tipo:obra.tipo,autor:obra.autor,genero:obra.genero,descricao:obra.descricao,capitulos:(obra.capitulos||[]).map(c=>({...c,paginas:(c.paginas||[]).map(p=>{const q={...p};delete q.blob;return q})}))}));
+  if(obra.capa_blob)zip.file("capa."+ext(obra.capa_url||"jpg"),obra.capa_blob);
+  for(const c of obra.capitulos||[]){
+    if(obra.tipo==="MANGÁ")for(const p of c.paginas||[]){
+      let blob=p.blob||null;if(!blob){const r=await fetch(p.imagem_url,{cache:"no-store"});if(!r.ok)throw Error("Falha ao baixar a página "+p.ordem);blob=await r.blob()}
+      zip.file(`capitulo-${pad(c.numero)}/pagina-${pad(p.ordem)}.${ext(p.imagem_url||"jpg")}`,blob);tick(`Capítulo ${c.numero}`,`Página ${p.ordem}/${c.paginas.length}`);
+    }else if(c.arquivo_blob||c.arquivo_url){
+      let blob=c.arquivo_blob||null;if(!blob){const r=await fetch(c.arquivo_url,{cache:"no-store"});if(!r.ok)throw Error("Falha ao baixar o capítulo "+c.numero);blob=await r.blob()}
+      zip.file(`capitulo-${pad(c.numero)}-${c.titulo||"novel"}.zip`,blob);tick(`Capítulo ${c.numero}`,`ZIP da Light Novel`);
+    }
+  }
+  downloadUI("📦 A finalizar ZIP","A compactar","A preparar o ficheiro...",96);
+  return await zip.generateAsync({type:"blob",compression:"DEFLATE"},m=>downloadUI("📦 A finalizar ZIP","A compactar",Math.round(m.percent||0)+"%",96+(m.percent||0)*.04));
+}
+async function baixarObraZIP(id){
+  let o=obras.find(x=>Number(x.id)===Number(id));if(!o){try{o=await dbGet(Number(id))}catch(_){}}
+  if(!o)return;
+  try{downloadUI("⬇️ A preparar ZIP","A iniciar","A reunir os arquivos...",0);const blob=await montarPacoteObra(o);const nome=`ANAGA-${o.titulo.replace(/[^\wÀ-ÿ -]/g,"").trim()||"obra"}.zip`;downloadUI("⬇️ ZIP pronto","Transferência preparada",nome,100);await baixarBlobAndroid(blob,nome);downloadUI("✅ Concluído","ZIP pronto",nome,100);downloadUIClose(1600)}
+  catch(e){console.error("ANAGA ZIP:",e);downloadUI("❌ Erro","Não foi possível criar o ZIP",e.message||"Verifica a internet e o espaço do aparelho.",0);downloadUIClose(3200)}
+}
+async function guardarObraOffline(id){
+  let o=obras.find(x=>Number(x.id)===Number(id));if(!o){try{o=await dbGet(Number(id))}catch(_){}}
+  if(!o)return;
+  try{
+    const caps=o.capitulos||[];let total=o.tipo==="MANGÁ"?caps.reduce((n,c)=>n+(c.paginas||[]).length,0):caps.filter(c=>c.arquivo_url||c.arquivo_blob).length,done=0;
+    const copia={id:Number(o.id),titulo:o.titulo,tipo:o.tipo,autor:o.autor,genero:o.genero,descricao:o.descricao,capa_url:o.capa_url||"",data:Date.now(),capitulos:[]};
+    if(o.capa_blob)copia.capa_blob=o.capa_blob;
+    else if(o.capa_url){
+      downloadUI("📥 A guardar offline","A baixar a capa","Capa da obra",0);
+      const r=await fetch(o.capa_url,{cache:"no-store"});
+      if(!r.ok)throw Error("Não foi possível guardar a capa offline.");
+      copia.capa_blob=await r.blob();
+    }
+    for(const c of caps){
+      const cc={id:c.id,obra_id:c.obra_id,numero:c.numero,titulo:c.titulo,conteudo:c.conteudo||null,arquivo_url:c.arquivo_url||null,paginas:[]};
+      if(o.tipo==="MANGÁ")for(const p of c.paginas||[]){
+        let blob=p.blob||null;if(!blob){const r=await fetch(p.imagem_url,{cache:"no-store"});if(!r.ok)throw Error("Falha ao baixar a página "+p.ordem);blob=await r.blob()}
+        cc.paginas.push({...p,blob});done++;downloadUI("📥 A guardar offline",`Capítulo ${c.numero}/${caps.length}`,`Página ${p.ordem}/${c.paginas.length} • ${done}/${total} páginas`,total?done/total*100:100);
+      }else if(c.arquivo_blob){cc.arquivo_blob=c.arquivo_blob;done++;downloadUI("📥 A guardar offline",`Capítulo ${c.numero}/${caps.length}`,"ZIP já disponível",total?done/total*100:100)}
+      else if(c.arquivo_url){const r=await fetch(c.arquivo_url,{cache:"no-store"});if(!r.ok)throw Error("Falha ao baixar o capítulo "+c.numero);cc.arquivo_blob=await r.blob();done++;downloadUI("📥 A guardar offline",`Capítulo ${c.numero}/${caps.length}`,"ZIP guardado",total?done/total*100:100)}
+      copia.capitulos.push(cc);
+    }
+    await dbPut(copia);
+    const i=obras.findIndex(x=>Number(x.id)===Number(o.id));if(i>=0)obras[i]={...obras[i],...copia,_offline:true};else obras.push({...copia,_offline:true});
+    if($("offlineBadge"))$("offlineBadge").textContent="GUARDADA OFFLINE";
+    downloadUI("✅ Concluído","Obra guardada offline",`${caps.length} capítulo(s) • ${total} item(ns)`,100);toast("Capa e conteúdo guardados para leitura sem internet.");downloadUIClose(1800);
+  }catch(e){console.error("ANAGA offline:",e);downloadUI("❌ Falha no download","Não foi possível guardar a obra",e.message||"Verifica a internet e o espaço do aparelho.",0);toast("Falha ao guardar offline.");downloadUIClose(3200)}
+}
+
+document.addEventListener("DOMContentLoaded",async()=>{
+  const authBtn=$("authMenuBtn");
+  if(authBtn)authBtn.addEventListener("click",abrirLogin);
+
+  const arquivoNovel=$("arquivoNovel");
+  if(arquivoNovel){
+    arquivoNovel.addEventListener("change",function(){
+      $("nomeNovel").textContent=this.files[0]?.name||"";
+    });
+  }
+
+  atualizarTipoCapitulo();
+  if(supabaseClient){
+    try{await verificarSessao();await carregarObras()}catch(e){console.warn("Online indisponível:",e)}
+  }
+  await carregarObrasOffline();
+  mostrarPagina("inicio");
+});
+
+if(supabaseClient){
+  supabaseClient.auth.onAuthStateChange(async(e,s)=>{
+    usuarioAtual=s?.user||null;
+    setTimeout(async()=>{
+      await atualizarUsuario();
+      atualizarCabecalho();
+    },0);
+  });
+}
+</script>
+</body>
+</html>

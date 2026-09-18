@@ -1,0 +1,3696 @@
+<!DOCTYPE html><html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Meu Dinheiro</title><!-- Chart.js LOCAL: funciona offline no APK --><script src="chart.js"></script><style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --bg:#f4f6f8;
+    --card:#fff;
+    --text:#202124;
+    --muted:#70757a;
+    --primary:#1565c0;
+    --primary2:#0d47a1;
+    --success:#159447;
+    --danger:#d93025;
+    --warning:#f59e0b;
+    --purple:#7b1fa2;
+    --border:#e1e5ea;
+    --shadow:0 4px 18px rgba(0,0,0,.07);
+}
+
+body.dark{
+    --bg:#101114;
+    --card:#1b1d21;
+    --text:#f5f5f5;
+    --muted:#aaa;
+    --border:#303238;
+    --shadow:0 4px 18px rgba(0,0,0,.25);
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+    padding:10px;
+}
+
+button,input,select{
+    font-family:inherit;
+}
+
+button{
+    border:0;
+    cursor:pointer;
+}
+
+.app{
+    width:100%;
+    max-width:950px;
+    margin:auto;
+}
+
+/* HEADER */
+
+.header{
+    background:linear-gradient(135deg,#0d47a1,#1976d2);
+    color:white;
+    padding:20px;
+    border-radius:18px;
+    margin-bottom:12px;
+    box-shadow:var(--shadow);
+}
+
+.header-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+
+.header h1{
+    font-size:25px;
+}
+
+.header p{
+    opacity:.88;
+    margin-top:5px;
+    font-size:14px;
+}
+
+.header-actions{
+    display:flex;
+    gap:7px;
+}
+
+.icon-btn{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:rgba(255,255,255,.16);
+    color:white;
+    font-size:19px;
+}
+
+/* AVISO */
+
+.notice{
+    background:linear-gradient(135deg,#fff8df,#fff1b5);
+    color:#634800;
+    border:1px solid #efd267;
+    border-radius:14px;
+    padding:14px;
+    margin-bottom:12px;
+    font-size:13px;
+    line-height:1.5;
+}
+
+body.dark .notice{
+    background:#332b12;
+    color:#ffe58a;
+    border-color:#695b27;
+}
+
+.notice strong{
+    display:block;
+    font-size:15px;
+    margin-bottom:4px;
+}
+
+/* DASHBOARD */
+
+.dashboard{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:9px;
+    margin-bottom:12px;
+}
+
+.card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:15px;
+    padding:15px;
+    box-shadow:var(--shadow);
+}
+
+.saldo-card{
+    grid-column:span 2;
+}
+
+.stat-title{
+    color:var(--muted);
+    font-size:12px;
+    margin-bottom:7px;
+}
+
+.stat-value{
+    font-size:20px;
+    font-weight:bold;
+}
+
+.saldo-card .stat-value{
+    font-size:27px;
+}
+
+.entrada{
+    color:var(--success);
+}
+
+.saida{
+    color:var(--danger);
+}
+
+/* NAVEGAÇÃO */
+
+.nav{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:6px;
+    margin-bottom:13px;
+}
+
+.nav button{
+    background:var(--card);
+    color:var(--text);
+    border:1px solid var(--border);
+    padding:11px 4px;
+    border-radius:10px;
+    font-size:12px;
+}
+
+.nav button.active{
+    background:var(--primary);
+    color:white;
+    border-color:var(--primary);
+}
+
+/* SEÇÕES */
+
+.section{
+    display:none;
+}
+
+.section.active{
+    display:block;
+}
+
+.section-title{
+    font-size:19px;
+    margin-bottom:13px;
+}
+
+.sub-title{
+    font-size:15px;
+    margin-bottom:10px;
+}
+
+/* FORM */
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+}
+
+.field{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+}
+
+.field.full{
+    grid-column:span 2;
+}
+
+label{
+    font-size:12px;
+    color:var(--muted);
+    font-weight:bold;
+}
+
+input,select{
+    width:100%;
+    padding:12px;
+    border:1px solid var(--border);
+    border-radius:9px;
+    background:var(--card);
+    color:var(--text);
+    outline:none;
+}
+
+input:focus,select:focus{
+    border-color:var(--primary);
+}
+
+/* BOTÕES */
+
+.actions{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:8px;
+    margin-top:11px;
+}
+
+.actions button{
+    padding:12px;
+    border-radius:9px;
+    font-weight:bold;
+}
+
+.primary{
+    background:var(--primary);
+    color:white;
+}
+
+.primary:hover{
+    background:var(--primary2);
+}
+
+.success{
+    background:var(--success);
+    color:white;
+}
+
+.danger{
+    background:var(--danger);
+    color:white;
+}
+
+.warning{
+    background:var(--warning);
+    color:white;
+}
+
+.purple{
+    background:var(--purple);
+    color:white;
+}
+
+.secondary{
+    background:var(--bg);
+    color:var(--text);
+    border:1px solid var(--border)!important;
+}
+
+/* ATALHOS */
+
+.quick-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:8px;
+    margin-top:12px;
+}
+
+.quick{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:14px 8px;
+    text-align:center;
+    color:var(--text);
+}
+
+.quick span{
+    display:block;
+    font-size:23px;
+    margin-bottom:5px;
+}
+
+.quick small{
+    color:var(--muted);
+}
+
+/* TRANSAÇÕES */
+
+.transaction{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:8px;
+    padding:12px;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    margin-bottom:8px;
+}
+
+.transaction-left{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    min-width:0;
+}
+
+.category-icon{
+    width:40px;
+    height:40px;
+    border-radius:11px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:var(--bg);
+    font-size:20px;
+    flex-shrink:0;
+}
+
+.transaction-info{
+    min-width:0;
+}
+
+.transaction-info strong{
+    display:block;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.transaction-info small{
+    color:var(--muted);
+    font-size:11px;
+}
+
+.transaction-right{
+    text-align:right;
+    white-space:nowrap;
+    font-size:12px;
+}
+
+.delete-btn{
+    background:transparent;
+    color:var(--danger);
+    margin-left:5px;
+}
+
+/* LISTAS */
+
+.item{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:13px;
+    padding:14px;
+    margin-bottom:8px;
+}
+
+.item-top{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+}
+
+.item h3{
+    font-size:15px;
+}
+
+.item p{
+    color:var(--muted);
+    margin-top:4px;
+    font-size:12px;
+}
+
+.item-actions{
+    display:flex;
+    gap:6px;
+    margin-top:9px;
+}
+
+.item-actions button{
+    padding:8px 10px;
+    border-radius:7px;
+}
+
+/* GRÁFICO */
+
+.chart-box{
+    height:290px;
+    position:relative;
+}
+
+/* PROGRESSO */
+
+.progress{
+    height:9px;
+    background:var(--bg);
+    border-radius:20px;
+    overflow:hidden;
+    margin:9px 0;
+}
+
+.progress-bar{
+    height:100%;
+    background:var(--primary);
+    border-radius:20px;
+}
+
+/* PESQUISA */
+
+.search-box{
+    margin-bottom:9px;
+}
+
+/* RELATÓRIO */
+
+.report{
+    line-height:1.7;
+}
+
+.report-row{
+    display:flex;
+    justify-content:space-between;
+    border-bottom:1px solid var(--border);
+    padding:8px 0;
+}
+
+/* BADGE */
+
+.badge{
+    display:inline-block;
+    padding:4px 8px;
+    border-radius:20px;
+    font-size:10px;
+    background:var(--bg);
+    color:var(--muted);
+}
+
+.badge.success{
+    background:#dff5e8;
+    color:#087a35;
+}
+
+.badge.warning{
+    background:#fff0c2;
+    color:#755700;
+}
+
+/* VENDAS */
+
+.business-box{
+    background:linear-gradient(135deg,#eef6ff,#f7fbff);
+    border:1px solid #cfe3ff;
+    border-radius:13px;
+    padding:13px;
+    margin-bottom:10px;
+}
+
+body.dark .business-box{
+    background:#162337;
+    border-color:#28486d;
+}
+
+.business-box h3{
+    font-size:15px;
+    margin-bottom:5px;
+}
+
+.business-box p{
+    color:var(--muted);
+    font-size:12px;
+    line-height:1.5;
+}
+
+/* VAZIO */
+
+.empty{
+    text-align:center;
+    color:var(--muted);
+    padding:28px 10px;
+}
+
+/* TOAST */
+
+.toast{
+    position:fixed;
+    bottom:20px;
+    left:50%;
+    transform:translateX(-50%) translateY(100px);
+    background:#222;
+    color:white;
+    padding:12px 17px;
+    border-radius:10px;
+    opacity:0;
+    transition:.3s;
+    z-index:9999;
+    max-width:90%;
+    text-align:center;
+    font-size:13px;
+}
+
+.toast.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+}
+
+/* MODO SIMPLES */
+
+.simple-mode .advanced-only{
+    display:none!important;
+}
+
+/* RESPONSIVO */
+
+@media(max-width:700px){
+
+    .dashboard{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .saldo-card{
+        grid-column:span 2;
+    }
+
+    .nav{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .field.full{
+        grid-column:span 1;
+    }
+
+    .quick-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:430px){
+
+    body{
+        padding:7px;
+    }
+
+    .header{
+        padding:16px;
+    }
+
+    .header h1{
+        font-size:20px;
+    }
+
+    .dashboard{
+        gap:6px;
+    }
+
+    .card{
+        padding:12px;
+    }
+
+    .stat-value{
+        font-size:16px;
+    }
+
+    .saldo-card .stat-value{
+        font-size:22px;
+    }
+
+    .nav button{
+        font-size:10px;
+    }
+
+    .actions{
+        grid-template-columns:1fr;
+    }
+}
+
+/* IMPRESSÃO */
+
+@media print{
+
+    body{
+        background:white;
+        color:black;
+    }
+
+    .header-actions,
+    .notice,
+    .nav,
+    .actions,
+    button,
+    input,
+    select,
+    .quick-grid{
+        display:none!important;
+    }
+
+    .card,
+    .item{
+        box-shadow:none;
+        border:1px solid #ddd;
+    }
+}
+</style></head><body><div class="app"><header class="header"><div class="header-top">
+
+    <div>
+        <h1>💰 Meu Dinheiro</h1>
+        <p>Finanças pessoais e gestão do teu negócio</p>
+    </div>
+
+    <div class="header-actions">
+        <button class="icon-btn" onclick="alternarTema()">🌙</button>
+        <button class="icon-btn" onclick="alternarModo()">⚙️</button>
+    </div>
+
+</div>
+
+</header><div class="notice"><strong>👑 Futuras funcionalidades Premium</strong>
+
+Neste momento todas as funcionalidades estão
+<b>gratuitas e desbloqueadas</b>.
+
+Futuramente algumas funções poderão ser Premium,
+com desbloqueio básico estimado entre
+<b>1.000 Kz e 1.500 Kz</b>.
+
+</div><!-- DASHBOARD --><div class="dashboard"><div class="card saldo-card">
+
+    <div class="stat-title">💰 Saldo atual</div>
+
+    <div class="stat-value" id="saldo">
+        0 Kz
+    </div>
+
+</div>
+
+<div class="card">
+
+    <div class="stat-title">📈 Entradas</div>
+
+    <div class="stat-value entrada" id="totalEntradas">
+        0 Kz
+    </div>
+
+</div>
+
+<div class="card">
+
+    <div class="stat-title">📉 Despesas</div>
+
+    <div class="stat-value saida" id="totalSaidas">
+        0 Kz
+    </div>
+
+</div>
+
+</div><!-- NAVEGAÇÃO --><nav class="nav"><button class="active" onclick="abrirSecao('inicio',this)">
+    🏠 Início
+</button>
+
+<button onclick="abrirSecao('transacoes',this)">
+    💳 Movimentos
+</button>
+
+<button onclick="abrirSecao('negocio',this)">
+    🏪 Negócio
+</button>
+
+<button onclick="abrirSecao('metas',this)">
+    🎯 Metas
+</button>
+
+<button onclick="abrirSecao('relatorios',this)">
+    📊 Relatórios
+</button>
+
+</nav><!-- INÍCIO --><section id="inicio" class="section active"><div class="card">
+
+    <h2 class="section-title">
+        ➕ Novo movimento
+    </h2>
+
+    <div class="business-box">
+
+        <h3>💡 Dica</h3>
+
+        <p>
+            Usa <b>valor positivo</b> para dinheiro que entrou
+            e <b>valor negativo</b> para dinheiro que saiu.
+            Isto funciona para salário, vendas, compras,
+            transporte, contas e despesas do negócio.
+        </p>
+
+    </div>
+
+    <form id="formTransacao">
+
+        <div class="form-grid">
+
+            <div class="field full">
+
+                <label>Descrição</label>
+
+                <input
+                    id="descricao"
+                    type="text"
+                    placeholder="Ex.: Venda de roupa, salário, almoço..."
+                    required
+                >
+
+            </div>
+
+            <div class="field">
+
+                <label>Valor (Kz)</label>
+
+                <input
+                    id="valor"
+                    type="number"
+                    step="0.01"
+                    placeholder="Ex.: 5000"
+                    required
+                >
+
+            </div>
+
+            <div class="field">
+
+                <label>Data</label>
+
+                <input
+                    id="data"
+                    type="date"
+                    required
+                >
+
+            </div>
+
+            <div class="field">
+
+                <label>Categoria</label>
+
+                <select id="categoria">
+
+                    <option value="Outros">📦 Outros</option>
+                    <option value="Venda">🛍️ Venda</option>
+                    <option value="Alimentação">🍔 Alimentação</option>
+                    <option value="Transporte">🚕 Transporte</option>
+                    <option value="Casa">🏠 Casa</option>
+                    <option value="Energia">💡 Energia</option>
+                    <option value="Internet">📱 Internet</option>
+                    <option value="Educação">🎓 Educação</option>
+                    <option value="Saúde">❤️ Saúde</option>
+                    <option value="Compras">🛒 Compras</option>
+                    <option value="Lazer">🎮 Lazer</option>
+                    <option value="Combustível">⛽ Combustível</option>
+                    <option value="Salário">💰 Salário</option>
+                    <option value="Fornecedor">📦 Fornecedor</option>
+
+                </select>
+
+            </div>
+
+            <div class="field">
+
+                <label>Conta</label>
+
+                <select id="conta"></select>
+
+            </div>
+
+        </div>
+
+        <div class="actions">
+
+            <button class="primary" type="submit">
+                ➕ Adicionar movimento
+            </button>
+
+            <button
+                type="button"
+                class="secondary"
+                onclick="limparFormulario()"
+            >
+                Limpar
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+<div class="quick-grid">
+
+    <button class="quick" onclick="abrirSecaoPorNome('transacoes')">
+        <span>💳</span>
+        <small>Movimentos</small>
+    </button>
+
+    <button class="quick" onclick="abrirSecaoPorNome('negocio')">
+        <span>🏪</span>
+        <small>Meu negócio</small>
+    </button>
+
+    <button class="quick" onclick="abrirSecaoPorNome('metas')">
+        <span>🎯</span>
+        <small>Minhas metas</small>
+    </button>
+
+    <button class="quick" onclick="abrirSecaoPorNome('relatorios')">
+        <span>📊</span>
+        <small>Relatórios</small>
+    </button>
+
+</div>
+
+<div class="card advanced-only" style="margin-top:12px">
+
+    <h2 class="section-title">
+        📊 Visão financeira
+    </h2>
+
+    <div class="chart-box">
+        <canvas id="grafico"></canvas>
+    </div>
+
+</div>
+
+<div class="card" style="margin-top:12px">
+
+    <h2 class="section-title">
+        🕒 Últimos movimentos
+    </h2>
+
+    <div id="ultimasTransacoes"></div>
+
+</div>
+
+</section><!-- MOVIMENTOS --><section id="transacoes" class="section"><div class="card">
+
+    <h2 class="section-title">
+        💳 Movimentos
+    </h2>
+
+    <input
+        class="search-box"
+        id="pesquisa"
+        type="search"
+        placeholder="🔎 Procurar..."
+        oninput="mostrarTransacoes()"
+    >
+
+    <div class="form-grid">
+
+        <div class="field">
+
+            <label>Categoria</label>
+
+            <select
+                id="filtroCategoria"
+                onchange="mostrarTransacoes()"
+            >
+
+                <option value="todas">Todas</option>
+                <option value="Venda">🛍️ Venda</option>
+                <option value="Alimentação">🍔 Alimentação</option>
+                <option value="Transporte">🚕 Transporte</option>
+                <option value="Casa">🏠 Casa</option>
+                <option value="Energia">💡 Energia</option>
+                <option value="Internet">📱 Internet</option>
+                <option value="Educação">🎓 Educação</option>
+                <option value="Saúde">❤️ Saúde</option>
+                <option value="Compras">🛒 Compras</option>
+                <option value="Lazer">🎮 Lazer</option>
+                <option value="Combustível">⛽ Combustível</option>
+                <option value="Salário">💰 Salário</option>
+                <option value="Fornecedor">📦 Fornecedor</option>
+                <option value="Outros">📦 Outros</option>
+
+            </select>
+
+        </div>
+
+        <div class="field">
+
+            <label>Tipo</label>
+
+            <select
+                id="filtroTipo"
+                onchange="mostrarTransacoes()"
+            >
+
+                <option value="todas">Todos</option>
+                <option value="entrada">Entradas</option>
+                <option value="saida">Despesas</option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div id="listaTransacoes" style="margin-top:12px"></div>
+
+</section><!-- NEGÓCIO --><section id="negocio" class="section"><div class="card">
+
+    <h2 class="section-title">
+        🏪 Gestão do negócio
+    </h2>
+
+    <div class="business-box">
+
+        <h3>Para vendedores e pequenos negócios</h3>
+
+        <p>
+            Regista vendas, clientes, produtos e fornecedores
+            sem complicação. A aplicação também pode ser usada
+            apenas para controlar o dinheiro pessoal.
+        </p>
+
+    </div>
+
+    <h3 class="sub-title">
+        🛍️ Registar venda
+    </h3>
+
+    <form id="formVenda">
+
+        <div class="form-grid">
+
+            <div class="field full">
+
+                <label>Produto / Serviço</label>
+
+                <input
+                    id="vendaProduto"
+                    type="text"
+                    placeholder="Ex.: Camiseta, corte de cabelo..."
+                    required
+                >
+
+            </div>
+
+            <div class="field">
+
+                <label>Valor da venda (Kz)</label>
+
+                <input
+                    id="vendaValor"
+                    type="number"
+                    step="0.01"
+                    required
+                >
+
+            </div>
+
+            <div class="field">
+
+                <label>Quantidade</label>
+
+                <input
+                    id="vendaQuantidade"
+                    type="number"
+                    min="1"
+                    value="1"
+                >
+
+            </div>
+
+            <div class="field">
+
+                <label>Cliente</label>
+
+                <input
+                    id="vendaCliente"
+                    type="text"
+                    placeholder="Opcional"
+                >
+
+            </div>
+
+            <div class="field">
+
+                <label>Forma de pagamento</label>
+
+                <select id="vendaPagamento">
+
+                    <option>Dinheiro</option>
+                    <option>Transferência</option>
+                    <option>Multicaixa</option>
+                    <option>Cartão</option>
+                    <option>Outro</option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <div class="actions">
+
+            <button class="success" type="submit">
+                🛍️ Registar venda
+            </button>
+
+            <button
+                class="secondary"
+                type="button"
+                onclick="limparVenda()"
+            >
+                Limpar
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+<div class="card" style="margin-top:12px">
+
+    <h2 class="section-title">
+        👥 Clientes
+    </h2>
+
+    <form id="formCliente">
+
+        <div class="form-grid">
+
+            <div class="field">
+
+                <label>Nome</label>
+
+                <input
+                    id="clienteNome"
+                    type="text"
+                    placeholder="Nome do cliente"
+                    required
+                >
+
+            </div>
+
+            <div class="field">
+
+                <label>Contacto</label>
+
+                <input
+                    id="clienteContacto"
+                    type="tel"
+                    placeholder="Telefone"
+                >
+
+            </div>
+
+        </div>
+
+        <div class="actions">
+
+            <button class="primary" type="submit">
+                ➕ Adicionar cliente
+            </button>
+
+        </div>
+
+    </form>
+
+    <div id="listaClientes" style="margin-top:12px"></div>
+
+</div>
+
+<div class="card" style="margin-top:12px">
+
+    <h2 class="section-title">
+        📦 Produtos e serviços
+    </h2>
+
+    <form id="formProduto">
+
+        <div class="form-grid">
+
+            <div class="field">
+
+                <label>Nome</label>
+
+                <input
+                    id="produtoNome"
+                    type="text"
+                    placeholder="Produto ou serviço"
+                    required
+                >
+
+            </div>
+
+            <div class="field">
+
+                <label>Preço (Kz)</label>
+
+                <input
+                    id="produtoPreco"
+                    type="number"
+                    step="0.01"
+                    required
+                >
+
+            </div>
+
+        </div>
+
+        <div class="actions">
+
+            <button class="primary" type="submit">
+                ➕ Adicionar
+            </button>
+
+        </div>
+
+    </form>
+
+    <div id="listaProdutos" style="margin-top:12px"></div>
+
+</div>
+
+</section><!-- METAS --><section id="metas" class="section"><div class="card">
+
+    <h2 class="section-title">
+        🎯 Metas financeiras
+    </h2>
+
+    <form id="formMeta">
+
+        <div class="form-grid">
+
+            <div class="field full">
+
+                <label>Nome da meta</label>
+
+                <input
+                    id="nomeMeta"
+                    type="text"
+                    placeholder="Ex.: Comprar computador"
+                    required
+                >
+
+            </div>
+
+            <div class="field">
+
+                <label>Valor objetivo (Kz)</label>
+
+                <input
+                    id="valorMeta"
+                    type="number"
+                    required
+                >
+
+            </div>
+
+            <div class="field">
+
+                <label>Valor já guardado (Kz)</label>
+
+                <input
+                    id="guardadoMeta"
+                    type="number"
+                    value="0"
+                >
+
+            </div>
+
+        </div>
+
+        <div class="actions">
+
+            <button class="primary" type="submit">
+                🎯 Criar meta
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+<div id="listaMetas" style="margin-top:12px"></div>
+
+</section><!-- RELATÓRIOS --><section id="relatorios" class="section"><div class="card">
+
+    <h2 class="section-title">
+        📊 Relatório financeiro
+    </h2>
+
+    <div class="report">
+
+        <div class="report-row">
+            <span>Entradas</span>
+            <strong class="entrada" id="relEntradas">0 Kz</strong>
+        </div>
+
+        <div class="report-row">
+            <span>Despesas</span>
+            <strong class="saida" id="relSaidas">0 Kz</strong>
+        </div>
+
+        <div class="report-row">
+            <span>Saldo</span>
+            <strong id="relSaldo">0 Kz</strong>
+        </div>
+
+        <div class="report-row">
+            <span>Movimentos</span>
+            <strong id="relQuantidade">0</strong>
+        </div>
+
+        <div class="report-row">
+            <span>Vendas</span>
+            <strong class="entrada" id="relVendas">0 Kz</strong>
+        </div>
+
+    </div>
+
+    <div class="actions">
+
+        <button class="primary" onclick="exportarCSV()">
+            📤 Exportar CSV
+        </button>
+
+        <button class="success" onclick="gerarPDF()">
+            📄 Exportar PDF
+        </button>
+
+    </div>
+
+</div>
+
+<div class="card" style="margin-top:12px">
+
+    <h2 class="section-title">
+        🏷️ Despesas por categoria
+    </h2>
+
+    <div id="categoriasRelatorio"></div>
+
+</div>
+
+<div class="card" style="margin-top:12px">
+
+    <h2 class="section-title">
+        💰 Orçamento mensal
+    </h2>
+
+    <div id="orcamentoArea"></div>
+
+    <div class="actions">
+
+        <button
+            class="secondary"
+            onclick="definirOrcamento()"
+        >
+            💰 Definir orçamento
+        </button>
+
+    </div>
+
+</div>
+
+<div class="card" style="margin-top:12px">
+
+    <h2 class="section-title">
+        🔔 Lembretes
+    </h2>
+
+    <form id="formLembrete">
+
+        <div class="form-grid">
+
+            <div class="field full">
+
+                <label>Conta / pagamento</label>
+
+                <input
+                    id="nomeLembrete"
+                    type="text"
+                    placeholder="Ex.: Internet"
+                    required
+                >
+
+            </div>
+
+            <div class="field">
+
+                <label>Valor (Kz)</label>
+
+                <input
+                    id="valorLembrete"
+                    type="number"
+                    placeholder="8000"
+                >
+
+            </div>
+
+            <div class="field">
+
+                <label>Dia do mês</label>
+
+                <input
+                    id="diaLembrete"
+                    type="number"
+                    min="1"
+                    max="31"
+                    placeholder="10"
+                    required
+                >
+
+            </div>
+
+        </div>
+
+        <div class="actions">
+
+            <button class="primary" type="submit">
+                🔔 Criar lembrete
+            </button>
+
+        </div>
+
+    </form>
+
+    <div id="listaLembretes" style="margin-top:12px"></div>
+
+</div>
+
+<div class="card advanced-only" style="margin-top:12px">
+
+    <h2 class="section-title">
+        🏦 Contas
+    </h2>
+
+    <form id="formConta">
+
+        <div class="form-grid">
+
+            <div class="field">
+
+                <label>Nome da conta</label>
+
+                <input
+                    id="nomeConta"
+                    type="text"
+                    placeholder="Ex.: Banco"
+                    required
+                >
+
+            </div>
+
+            <div class="field">
+
+                <label>Saldo inicial</label>
+
+                <input
+                    id="saldoConta"
+                    type="number"
+                    value="0"
+                >
+
+            </div>
+
+        </div>
+
+        <div class="actions">
+
+            <button class="primary" type="submit">
+                ➕ Adicionar conta
+            </button>
+
+        </div>
+
+    </form>
+
+    <div id="listaContas" style="margin-top:12px"></div>
+
+</div>
+
+<div class="card" style="margin-top:12px">
+
+    <h2 class="section-title">
+        🧹 Dados
+    </h2>
+
+    <p style="color:var(--muted);font-size:12px;margin-bottom:10px">
+        Apaga todos os dados guardados nesta aplicação.
+    </p>
+
+    <button
+        class="danger"
+        style="width:100%;padding:13px;border-radius:9px;font-weight:bold"
+        onclick="limparTudo()"
+    >
+        🗑️ Apagar todos os dados
+    </button>
+
+</div>
+
+</section></div><div id="toast" class="toast"></div><script>
+
+/* =========================================================
+   DADOS
+========================================================= */
+
+let transacoes =
+    JSON.parse(localStorage.getItem("transacoes")) || [];
+
+let metas =
+    JSON.parse(localStorage.getItem("metas")) || [];
+
+let contas =
+    JSON.parse(localStorage.getItem("contas")) || [
+        {
+            id:Date.now(),
+            nome:"Principal",
+            saldo:0
+        }
+    ];
+
+let lembretes =
+    JSON.parse(localStorage.getItem("lembretes")) || [];
+
+let clientes =
+    JSON.parse(localStorage.getItem("clientes")) || [];
+
+let produtos =
+    JSON.parse(localStorage.getItem("produtos")) || [];
+
+let vendas =
+    JSON.parse(localStorage.getItem("vendas")) || [];
+
+let orcamento =
+    Number(localStorage.getItem("orcamento")) || 0;
+
+let grafico;
+
+
+/* =========================================================
+   UTILIDADES
+========================================================= */
+
+function dinheiro(valor){
+
+    return Number(valor || 0).toLocaleString(
+        "pt-AO",
+        {
+            minimumFractionDigits:2,
+            maximumFractionDigits:2
+        }
+    ) + " Kz";
+
+}
+
+
+function salvar(){
+
+    localStorage.setItem(
+        "transacoes",
+        JSON.stringify(transacoes)
+    );
+
+    localStorage.setItem(
+        "metas",
+        JSON.stringify(metas)
+    );
+
+    localStorage.setItem(
+        "contas",
+        JSON.stringify(contas)
+    );
+
+    localStorage.setItem(
+        "lembretes",
+        JSON.stringify(lembretes)
+    );
+
+    localStorage.setItem(
+        "clientes",
+        JSON.stringify(clientes)
+    );
+
+    localStorage.setItem(
+        "produtos",
+        JSON.stringify(produtos)
+    );
+
+    localStorage.setItem(
+        "vendas",
+        JSON.stringify(vendas)
+    );
+
+    localStorage.setItem(
+        "orcamento",
+        orcamento
+    );
+
+}
+
+
+function toast(mensagem){
+
+    const t =
+        document.getElementById("toast");
+
+    t.textContent = mensagem;
+
+    t.classList.add("show");
+
+    setTimeout(function(){
+        t.classList.remove("show");
+    },2600);
+
+}
+
+
+function dataHoje(){
+
+    const d = new Date();
+
+    return d.getFullYear() +
+        "-" +
+        String(d.getMonth()+1).padStart(2,"0") +
+        "-" +
+        String(d.getDate()).padStart(2,"0");
+
+}
+
+
+function escapeHTML(texto){
+
+    return String(texto || "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================================================
+   CATEGORIAS
+========================================================= */
+
+function iconeCategoria(categoria){
+
+    const icons = {
+
+        "Venda":"🛍️",
+        "Alimentação":"🍔",
+        "Transporte":"🚕",
+        "Casa":"🏠",
+        "Energia":"💡",
+        "Internet":"📱",
+        "Educação":"🎓",
+        "Saúde":"❤️",
+        "Compras":"🛒",
+        "Lazer":"🎮",
+        "Combustível":"⛽",
+        "Salário":"💰",
+        "Fornecedor":"📦",
+        "Outros":"📦"
+
+    };
+
+    return icons[categoria] || "📦";
+
+}
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+function atualizarDashboard(){
+
+    let entradas = 0;
+    let saidas = 0;
+
+    transacoes.forEach(function(t){
+
+        const valor =
+            Number(t.valor) || 0;
+
+        if(valor >= 0)
+            entradas += valor;
+        else
+            saidas += Math.abs(valor);
+
+    });
+
+    const saldo =
+        entradas - saidas;
+
+    document.getElementById("saldo").textContent =
+        dinheiro(saldo);
+
+    document.getElementById("totalEntradas").textContent =
+        dinheiro(entradas);
+
+    document.getElementById("totalSaidas").textContent =
+        dinheiro(saidas);
+
+    document.getElementById("relEntradas").textContent =
+        dinheiro(entradas);
+
+    document.getElementById("relSaidas").textContent =
+        dinheiro(saidas);
+
+    document.getElementById("relSaldo").textContent =
+        dinheiro(saldo);
+
+    document.getElementById("relQuantidade").textContent =
+        transacoes.length;
+
+    const totalVendas =
+        vendas.reduce(function(total,v){
+            return total + Number(v.valor || 0);
+        },0);
+
+    document.getElementById("relVendas").textContent =
+        dinheiro(totalVendas);
+
+}
+
+
+/* =========================================================
+   NOVA TRANSAÇÃO
+========================================================= */
+
+document.getElementById("data").value =
+    dataHoje();
+
+
+document.getElementById("formTransacao")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    const descricao =
+        document.getElementById("descricao")
+        .value.trim();
+
+    const valor =
+        Number(
+            document.getElementById("valor").value
+        );
+
+    const data =
+        document.getElementById("data").value;
+
+    const categoria =
+        document.getElementById("categoria").value;
+
+    const conta =
+        document.getElementById("conta").value;
+
+    if(
+        !descricao ||
+        !data ||
+        isNaN(valor)
+    ){
+
+        toast("Preenche os campos corretamente.");
+
+        return;
+
+    }
+
+    transacoes.push({
+
+        id:Date.now(),
+
+        descricao:descricao,
+
+        valor:valor,
+
+        data:data,
+
+        categoria:categoria,
+
+        conta:conta
+
+    });
+
+    salvar();
+
+    atualizarTudo();
+
+    limparFormulario();
+
+    toast("Movimento adicionado com sucesso.");
+
+});
+
+
+function limparFormulario(){
+
+    document.getElementById(
+        "formTransacao"
+    ).reset();
+
+    document.getElementById(
+        "data"
+    ).value = dataHoje();
+
+}
+
+
+/* =========================================================
+   TRANSAÇÕES
+========================================================= */
+
+function removerTransacao(id){
+
+    if(
+        !confirm(
+            "Desejas apagar esta transação?"
+        )
+    )
+        return;
+
+    transacoes =
+        transacoes.filter(function(t){
+            return t.id !== id;
+        });
+
+    salvar();
+
+    atualizarTudo();
+
+    toast("Transação removida.");
+
+}
+
+
+function mostrarTransacoes(){
+
+    const lista =
+        document.getElementById(
+            "listaTransacoes"
+        );
+
+    const pesquisa =
+        (
+            document.getElementById("pesquisa")
+            .value || ""
+        ).toLowerCase();
+
+    const categoria =
+        document.getElementById(
+            "filtroCategoria"
+        ).value;
+
+    const tipo =
+        document.getElementById(
+            "filtroTipo"
+        ).value;
+
+    let dados =
+        transacoes.slice().reverse();
+
+    dados =
+        dados.filter(function(t){
+
+            const texto =
+                (
+                    t.descricao +
+                    " " +
+                    t.categoria +
+                    " " +
+                    (t.conta || "")
+                ).toLowerCase();
+
+            const correspondePesquisa =
+                texto.includes(pesquisa);
+
+            const correspondeCategoria =
+                categoria === "todas" ||
+                t.categoria === categoria;
+
+            const valor =
+                Number(t.valor);
+
+            const correspondeTipo =
+                tipo === "todas" ||
+                (
+                    tipo === "entrada" &&
+                    valor >= 0
+                ) ||
+                (
+                    tipo === "saida" &&
+                    valor < 0
+                );
+
+            return (
+                correspondePesquisa &&
+                correspondeCategoria &&
+                correspondeTipo
+            );
+
+        });
+
+    if(!dados.length){
+
+        lista.innerHTML =
+            '<div class="card empty">' +
+            'Nenhum movimento encontrado.' +
+            '</div>';
+
+        return;
+
+    }
+
+    lista.innerHTML =
+        dados.map(function(t){
+
+            const entrada =
+                Number(t.valor) >= 0;
+
+            return `
+
+            <div class="transaction">
+
+                <div class="transaction-left">
+
+                    <div class="category-icon">
+                        ${iconeCategoria(t.categoria)}
+                    </div>
+
+                    <div class="transaction-info">
+
+                        <strong>
+                            ${escapeHTML(t.descricao)}
+                        </strong>
+
+                        <small>
+                            ${escapeHTML(t.data)}
+                            •
+                            ${escapeHTML(t.categoria)}
+                            •
+                            ${escapeHTML(t.conta || "Principal")}
+                        </small>
+
+                    </div>
+
+                </div>
+
+                <div class="transaction-right">
+
+                    <strong class="${entrada ? "entrada":"saida"}">
+
+                        ${entrada ? "+" : "-"}
+                        ${dinheiro(Math.abs(t.valor))}
+
+                    </strong>
+
+                    <button
+                        class="delete-btn"
+                        onclick="removerTransacao(${t.id})"
+                    >
+                        ✖
+                    </button>
+
+                </div>
+
+            </div>
+
+            `;
+
+        }).join("");
+
+}
+
+
+function atualizarUltimas(){
+
+    const area =
+        document.getElementById(
+            "ultimasTransacoes"
+        );
+
+    const dados =
+        transacoes
+        .slice()
+        .sort(function(a,b){
+
+            return new Date(b.data) -
+                new Date(a.data);
+
+        })
+        .slice(0,5);
+
+    if(!dados.length){
+
+        area.innerHTML =
+            '<div class="empty">' +
+            'Ainda não existem movimentos.' +
+            '</div>';
+
+        return;
+
+    }
+
+    area.innerHTML =
+        dados.map(function(t){
+
+            const entrada =
+                Number(t.valor) >= 0;
+
+            return `
+
+            <div class="transaction">
+
+                <div class="transaction-left">
+
+                    <div class="category-icon">
+                        ${iconeCategoria(t.categoria)}
+                    </div>
+
+                    <div class="transaction-info">
+
+                        <strong>
+                            ${escapeHTML(t.descricao)}
+                        </strong>
+
+                        <small>
+                            ${escapeHTML(t.data)}
+                            •
+                            ${escapeHTML(t.categoria)}
+                        </small>
+
+                    </div>
+
+                </div>
+
+                <strong class="${entrada ? "entrada":"saida"}">
+
+                    ${entrada ? "+" : "-"}
+                    ${dinheiro(Math.abs(t.valor))}
+
+                </strong>
+
+            </div>
+
+            `;
+
+        }).join("");
+
+}
+
+
+/* =========================================================
+   GRÁFICO
+========================================================= */
+
+function atualizarGrafico(){
+
+    const canvas =
+        document.getElementById("grafico");
+
+    if(!canvas)
+        return;
+
+    if(
+        typeof Chart === "undefined"
+    ){
+
+        toast(
+            "Gráfico indisponível: chart.js não encontrado."
+        );
+
+        return;
+
+    }
+
+    let entradas = 0;
+    let saidas = 0;
+
+    transacoes.forEach(function(t){
+
+        const valor =
+            Number(t.valor) || 0;
+
+        if(valor >= 0)
+            entradas += valor;
+        else
+            saidas += Math.abs(valor);
+
+    });
+
+    if(grafico)
+        grafico.destroy();
+
+    grafico =
+        new Chart(
+            canvas.getContext("2d"),
+            {
+
+                type:"doughnut",
+
+                data:{
+
+                    labels:[
+                        "Entradas",
+                        "Despesas"
+                    ],
+
+                    datasets:[{
+
+                        data:[
+                            entradas,
+                            saidas
+                        ],
+
+                        backgroundColor:[
+                            "#159447",
+                            "#dc3545"
+                        ]
+
+                    }]
+
+                },
+
+                options:{
+
+                    responsive:true,
+
+                    maintainAspectRatio:false,
+
+                    plugins:{
+                        legend:{
+                            position:"bottom"
+                        }
+                    }
+
+                }
+
+            }
+        );
+
+}
+
+
+/* =========================================================
+   VENDAS
+========================================================= */
+
+document.getElementById("formVenda")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    const produto =
+        document.getElementById(
+            "vendaProduto"
+        ).value.trim();
+
+    const valor =
+        Number(
+            document.getElementById(
+                "vendaValor"
+            ).value
+        );
+
+    const quantidade =
+        Number(
+            document.getElementById(
+                "vendaQuantidade"
+            ).value
+        ) || 1;
+
+    const cliente =
+        document.getElementById(
+            "vendaCliente"
+        ).value.trim();
+
+    const pagamento =
+        document.getElementById(
+            "vendaPagamento"
+        ).value;
+
+    if(
+        !produto ||
+        !valor ||
+        valor <= 0
+    ){
+
+        toast("Informe produto e valor da venda.");
+
+        return;
+
+    }
+
+    const agora =
+        dataHoje();
+
+    vendas.push({
+
+        id:Date.now(),
+
+        produto:produto,
+
+        valor:valor * quantidade,
+
+        quantidade:quantidade,
+
+        cliente:cliente,
+
+        pagamento:pagamento,
+
+        data:agora
+
+    });
+
+    /*
+       A venda também entra automaticamente
+       no saldo financeiro.
+    */
+
+    transacoes.push({
+
+        id:Date.now()+1,
+
+        descricao:
+            "Venda: " + produto,
+
+        valor:
+            valor * quantidade,
+
+        data:
+            agora,
+
+        categoria:
+            "Venda",
+
+        conta:
+            document.getElementById("conta").value ||
+            "Principal"
+
+    });
+
+    salvar();
+
+    atualizarTudo();
+
+    mostrarVendas();
+
+    limparVenda();
+
+    toast("🛍️ Venda registada com sucesso.");
+
+});
+
+
+function limparVenda(){
+
+    document.getElementById(
+        "formVenda"
+    ).reset();
+
+    document.getElementById(
+        "vendaQuantidade"
+    ).value = 1;
+
+}
+
+
+function mostrarVendas(){
+
+    /*
+       Reservado para evolução futura.
+       As vendas já aparecem nos relatórios
+       e nos movimentos.
+    */
+
+}
+
+
+/* =========================================================
+   CLIENTES
+========================================================= */
+
+document.getElementById("formCliente")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    const nome =
+        document.getElementById(
+            "clienteNome"
+        ).value.trim();
+
+    const contacto =
+        document.getElementById(
+            "clienteContacto"
+        ).value.trim();
+
+    if(!nome){
+
+        toast("Informe o nome do cliente.");
+
+        return;
+
+    }
+
+    clientes.push({
+
+        id:Date.now(),
+
+        nome:nome,
+
+        contacto:contacto
+
+    });
+
+    salvar();
+
+    mostrarClientes();
+
+    this.reset();
+
+    toast("Cliente adicionado.");
+
+});
+
+
+function mostrarClientes(){
+
+    const area =
+        document.getElementById(
+            "listaClientes"
+        );
+
+    if(!clientes.length){
+
+        area.innerHTML =
+            '<div class="empty">' +
+            'Ainda não existem clientes.' +
+            '</div>';
+
+        return;
+
+    }
+
+    area.innerHTML =
+        clientes.map(function(c){
+
+            return `
+
+            <div class="item">
+
+                <div class="item-top">
+
+                    <div>
+
+                        <h3>
+                            👤 ${escapeHTML(c.nome)}
+                        </h3>
+
+                        <p>
+                            ${escapeHTML(
+                                c.contacto || "Sem contacto"
+                            )}
+                        </p>
+
+                    </div>
+
+                    <button
+                        class="danger"
+                        style="padding:7px;border-radius:7px"
+                        onclick="removerCliente(${c.id})"
+                    >
+                        ✖
+                    </button>
+
+                </div>
+
+            </div>
+
+            `;
+
+        }).join("");
+
+}
+
+
+function removerCliente(id){
+
+    if(!confirm("Apagar este cliente?"))
+        return;
+
+    clientes =
+        clientes.filter(function(c){
+            return c.id !== id;
+        });
+
+    salvar();
+
+    mostrarClientes();
+
+    toast("Cliente removido.");
+
+}
+
+
+/* =========================================================
+   PRODUTOS
+========================================================= */
+
+document.getElementById("formProduto")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    const nome =
+        document.getElementById(
+            "produtoNome"
+        ).value.trim();
+
+    const preco =
+        Number(
+            document.getElementById(
+                "produtoPreco"
+            ).value
+        );
+
+    if(
+        !nome ||
+        !preco ||
+        preco <= 0
+    ){
+
+        toast("Informe nome e preço.");
+
+        return;
+
+    }
+
+    produtos.push({
+
+        id:Date.now(),
+
+        nome:nome,
+
+        preco:preco
+
+    });
+
+    salvar();
+
+    mostrarProdutos();
+
+    this.reset();
+
+    toast("Produto adicionado.");
+
+});
+
+
+function mostrarProdutos(){
+
+    const area =
+        document.getElementById(
+            "listaProdutos"
+        );
+
+    if(!produtos.length){
+
+        area.innerHTML =
+            '<div class="empty">' +
+            'Ainda não existem produtos.' +
+            '</div>';
+
+        return;
+
+    }
+
+    area.innerHTML =
+        produtos.map(function(p){
+
+            return `
+
+            <div class="item">
+
+                <div class="item-top">
+
+                    <div>
+
+                        <h3>
+                            📦 ${escapeHTML(p.nome)}
+                        </h3>
+
+                        <p>
+                            ${dinheiro(p.preco)}
+                        </p>
+
+                    </div>
+
+                    <button
+                        class="danger"
+                        style="padding:7px;border-radius:7px"
+                        onclick="removerProduto(${p.id})"
+                    >
+                        ✖
+                    </button>
+
+                </div>
+
+            </div>
+
+            `;
+
+        }).join("");
+
+}
+
+
+function removerProduto(id){
+
+    if(!confirm("Apagar este produto?"))
+        return;
+
+    produtos =
+        produtos.filter(function(p){
+            return p.id !== id;
+        });
+
+    salvar();
+
+    mostrarProdutos();
+
+    toast("Produto removido.");
+
+}
+
+
+/* =========================================================
+   METAS
+========================================================= */
+
+document.getElementById("formMeta")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    const nome =
+        document.getElementById(
+            "nomeMeta"
+        ).value.trim();
+
+    const objetivo =
+        Number(
+            document.getElementById(
+                "valorMeta"
+            ).value
+        );
+
+    const guardado =
+        Number(
+            document.getElementById(
+                "guardadoMeta"
+            ).value
+        ) || 0;
+
+    if(
+        !nome ||
+        objetivo <= 0
+    ){
+
+        toast("Informe um objetivo válido.");
+
+        return;
+
+    }
+
+    metas.push({
+
+        id:Date.now(),
+
+        nome:nome,
+
+        objetivo:objetivo,
+
+        guardado:Math.max(0,guardado)
+
+    });
+
+    salvar();
+
+    mostrarMetas();
+
+    this.reset();
+
+    toast("🎯 Meta criada.");
+
+});
+
+
+function mostrarMetas(){
+
+    const area =
+        document.getElementById(
+            "listaMetas"
+        );
+
+    if(!metas.length){
+
+        area.innerHTML =
+            '<div class="card empty">' +
+            'Ainda não tens metas.' +
+            '</div>';
+
+        return;
+
+    }
+
+    area.innerHTML =
+        metas.map(function(m){
+
+            const porcentagem =
+                Math.min(
+                    100,
+                    (Number(m.guardado) /
+                    Number(m.objetivo))*100
+                );
+
+            return `
+
+            <div class="item">
+
+                <div class="item-top">
+
+                    <div>
+
+                        <h3>
+                            🎯 ${escapeHTML(m.nome)}
+                        </h3>
+
+                        <p>
+                            ${dinheiro(m.guardado)}
+                            de
+                            ${dinheiro(m.objetivo)}
+                        </p>
+
+                    </div>
+
+                    <strong>
+                        ${porcentagem.toFixed(0)}%
+                    </strong>
+
+                </div>
+
+                <div class="progress">
+
+                    <div
+                        class="progress-bar"
+                        style="width:${porcentagem}%"
+                    ></div>
+
+                </div>
+
+                <div class="item-actions">
+
+                    <button
+                        class="primary"
+                        onclick="adicionarMeta(${m.id})"
+                    >
+                        + Guardar
+                    </button>
+
+                    <button
+                        class="danger"
+                        onclick="removerMeta(${m.id})"
+                    >
+                        Apagar
+                    </button>
+
+                </div>
+
+            </div>
+
+            `;
+
+        }).join("");
+
+}
+
+
+function adicionarMeta(id){
+
+    const valor =
+        Number(
+            prompt(
+                "Quanto desejas adicionar à meta?"
+            )
+        );
+
+    if(
+        !valor ||
+        valor <= 0
+    )
+        return;
+
+    const meta =
+        metas.find(function(m){
+            return m.id === id;
+        });
+
+    if(!meta)
+        return;
+
+    meta.guardado += valor;
+
+    if(
+        meta.guardado >=
+        meta.objetivo
+    ){
+
+        meta.guardado =
+            meta.objetivo;
+
+        toast(
+            "🎉 Parabéns! Meta alcançada!"
+        );
+
+    }
+
+    salvar();
+
+    mostrarMetas();
+
+}
+
+
+function removerMeta(id){
+
+    if(!confirm("Apagar esta meta?"))
+        return;
+
+    metas =
+        metas.filter(function(m){
+            return m.id !== id;
+        });
+
+    salvar();
+
+    mostrarMetas();
+
+}
+
+
+/* =========================================================
+   CONTAS
+========================================================= */
+
+function atualizarContasSelect(){
+
+    const select =
+        document.getElementById(
+            "conta"
+        );
+
+    if(!contas.length){
+
+        contas.push({
+
+            id:Date.now(),
+
+            nome:"Principal",
+
+            saldo:0
+
+        });
+
+    }
+
+    select.innerHTML =
+        contas.map(function(c){
+
+            return `
+                <option value="${escapeHTML(c.nome)}">
+                    ${escapeHTML(c.nome)}
+                </option>
+            `;
+
+        }).join("");
+
+}
+
+
+document.getElementById("formConta")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    const nome =
+        document.getElementById(
+            "nomeConta"
+        ).value.trim();
+
+    const saldo =
+        Number(
+            document.getElementById(
+                "saldoConta"
+            ).value
+        ) || 0;
+
+    if(!nome){
+
+        toast("Informe o nome da conta.");
+
+        return;
+
+    }
+
+    contas.push({
+
+        id:Date.now(),
+
+        nome:nome,
+
+        saldo:saldo
+
+    });
+
+    salvar();
+
+    atualizarContas();
+
+    this.reset();
+
+    toast("🏦 Conta adicionada.");
+
+});
+
+
+function atualizarContas(){
+
+    atualizarContasSelect();
+
+    const area =
+        document.getElementById(
+            "listaContas"
+        );
+
+    if(!area)
+        return;
+
+    area.innerHTML =
+        contas.map(function(c){
+
+            const transacoesConta =
+                transacoes.filter(function(t){
+
+                    return t.conta === c.nome;
+
+                });
+
+            let saldo =
+                Number(c.saldo) || 0;
+
+            transacoesConta.forEach(function(t){
+
+                saldo += Number(t.valor) || 0;
+
+            });
+
+            return `
+
+            <div class="item">
+
+                <div class="item-top">
+
+                    <div>
+
+                        <h3>
+                            🏦 ${escapeHTML(c.nome)}
+                        </h3>
+
+                        <p>
+                            Saldo da conta
+                        </p>
+
+                    </div>
+
+                    <strong>
+                        ${dinheiro(saldo)}
+                    </strong>
+
+                </div>
+
+            </div>
+
+            `;
+
+        }).join("");
+
+}
+
+
+/* =========================================================
+   ORÇAMENTO
+========================================================= */
+
+function definirOrcamento(){
+
+    const valor =
+        Number(
+            prompt(
+                "Qual é o teu orçamento mensal em Kz?"
+            )
+        );
+
+    if(
+        isNaN(valor) ||
+        valor < 0
+    )
+        return;
+
+    orcamento = valor;
+
+    salvar();
+
+    atualizarOrcamento();
+
+    toast("Orçamento atualizado.");
+
+}
+
+
+function atualizarOrcamento(){
+
+    const area =
+        document.getElementById(
+            "orcamentoArea"
+        );
+
+    if(!orcamento){
+
+        area.innerHTML =
+            '<p style="color:var(--muted)">' +
+            'Nenhum orçamento definido.' +
+            '</p>';
+
+        return;
+
+    }
+
+    const agora =
+        new Date();
+
+    const mes =
+        agora.getMonth();
+
+    const ano =
+        agora.getFullYear();
+
+    let gasto = 0;
+
+    transacoes.forEach(function(t){
+
+        const d =
+            new Date(t.data);
+
+        if(
+            d.getMonth() === mes &&
+            d.getFullYear() === ano &&
+            Number(t.valor) < 0
+        ){
+
+            gasto +=
+                Math.abs(Number(t.valor));
+
+        }
+
+    });
+
+    const porcentagem =
+        Math.min(
+            100,
+            (gasto/orcamento)*100
+        );
+
+    area.innerHTML = `
+
+        <p>
+            Gastos:
+            <strong>${dinheiro(gasto)}</strong>
+        </p>
+
+        <p>
+            Orçamento:
+            <strong>${dinheiro(orcamento)}</strong>
+        </p>
+
+        <div class="progress">
+
+            <div
+                class="progress-bar"
+                style="width:${porcentagem}%"
+            ></div>
+
+        </div>
+
+        <p style="color:var(--muted);font-size:12px">
+            ${porcentagem.toFixed(0)}%
+            do orçamento utilizado.
+        </p>
+
+    `;
+
+}
+
+
+/* =========================================================
+   LEMBRETES
+========================================================= */
+
+document.getElementById("formLembrete")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    const nome =
+        document.getElementById(
+            "nomeLembrete"
+        ).value.trim();
+
+    const valor =
+        Number(
+            document.getElementById(
+                "valorLembrete"
+            ).value
+        ) || 0;
+
+    const dia =
+        Number(
+            document.getElementById(
+                "diaLembrete"
+            ).value
+        );
+
+    if(
+        !nome ||
+        dia < 1 ||
+        dia > 31
+    ){
+
+        toast("Informe um dia válido.");
+
+        return;
+
+    }
+
+    lembretes.push({
+
+        id:Date.now(),
+
+        nome:nome,
+
+        valor:valor,
+
+        dia:dia
+
+    });
+
+    salvar();
+
+    mostrarLembretes();
+
+    this.reset();
+
+    toast("🔔 Lembrete criado.");
+
+});
+
+
+function mostrarLembretes(){
+
+    const area =
+        document.getElementById(
+            "listaLembretes"
+        );
+
+    if(!lembretes.length){
+
+        area.innerHTML =
+            '<div class="empty">' +
+            'Nenhum lembrete criado.' +
+            '</div>';
+
+        return;
+
+    }
+
+    area.innerHTML =
+        lembretes.map(function(l){
+
+            return `
+
+            <div class="item">
+
+                <div class="item-top">
+
+                    <div>
+
+                        <h3>
+                            🔔 ${escapeHTML(l.nome)}
+                        </h3>
+
+                        <p>
+                            Dia ${l.dia}
+                            ${
+                                l.valor
+                                ? " • " +
+                                dinheiro(l.valor)
+                                : ""
+                            }
+                        </p>
+
+                    </div>
+
+                    <button
+                        class="danger"
+                        style="padding:7px;border-radius:7px"
+                        onclick="removerLembrete(${l.id})"
+                    >
+                        ✖
+                    </button>
+
+                </div>
+
+            </div>
+
+            `;
+
+        }).join("");
+
+}
+
+
+function removerLembrete(id){
+
+    lembretes =
+        lembretes.filter(function(l){
+            return l.id !== id;
+        });
+
+    salvar();
+
+    mostrarLembretes();
+
+}
+
+
+/* =========================================================
+   EXPORTAR CSV
+========================================================= */
+
+function exportarCSV(){
+
+    if(!transacoes.length){
+
+        toast(
+            "Não existem movimentos para exportar."
+        );
+
+        return;
+
+    }
+
+    const cabecalho =
+        "Descrição,Valor,Data,Categoria,Conta\n";
+
+    const linhas =
+        transacoes.map(function(t){
+
+            return [
+
+                csvEscape(t.descricao),
+
+                t.valor,
+
+                t.data,
+
+                csvEscape(t.categoria),
+
+                csvEscape(t.conta || "Principal")
+
+            ].join(",");
+
+        }).join("\n");
+
+    const csv =
+        cabecalho + linhas;
+
+    /*
+       APK:
+       chama diretamente o MainActivity.java
+    */
+
+    if(
+        typeof Android !== "undefined" &&
+        typeof Android.exportarCSV === "function"
+    ){
+
+        try{
+
+            Android.exportarCSV(csv);
+
+            toast(
+                "📤 A exportação foi enviada para Downloads."
+            );
+
+        }catch(e){
+
+            toast(
+                "Não foi possível exportar CSV."
+            );
+
+        }
+
+        return;
+
+    }
+
+    /*
+       Chrome / navegador
+    */
+
+    try{
+
+        const blob =
+            new Blob(
+                [csv],
+                {
+                    type:"text/csv;charset=utf-8"
+                }
+            );
+
+        const url =
+            URL.createObjectURL(blob);
+
+        const a =
+            document.createElement("a");
+
+        a.href = url;
+
+        a.download =
+            "meu-dinheiro-transacoes.csv";
+
+        document.body.appendChild(a);
+
+        a.click();
+
+        a.remove();
+
+        URL.revokeObjectURL(url);
+
+        toast("CSV exportado.");
+
+    }catch(e){
+
+        toast(
+            "Exportação CSV indisponível."
+        );
+
+    }
+
+}
+
+
+function csvEscape(valor){
+
+    valor =
+        String(valor || "");
+
+    if(
+        valor.includes(",") ||
+        valor.includes('"') ||
+        valor.includes("\n")
+    ){
+
+        return '"' +
+            valor.replace(/"/g,'""') +
+            '"';
+
+    }
+
+    return valor;
+
+}
+
+
+/* =========================================================
+   PDF
+========================================================= */
+
+function gerarPDF() {
+
+    if (!transacoes.length) {
+        toast("Não existem transações para gerar o PDF.");
+        return;
+    }
+
+    let entradas = 0;
+    let saidas = 0;
+
+    transacoes.forEach(t => {
+        const valor = Number(t.valor);
+
+        if (valor >= 0)
+            entradas += valor;
+        else
+            saidas += Math.abs(valor);
+    });
+
+    const saldo = entradas - saidas;
+
+    let dados =
+        "RESUMO FINANCEIRO\n" +
+        "==============================\n" +
+        "Entradas: " + dinheiro(entradas) + "\n" +
+        "Despesas: " + dinheiro(saidas) + "\n" +
+        "Saldo: " + dinheiro(saldo) + "\n" +
+        "Transações: " + transacoes.length + "\n" +
+        "\n" +
+        "TRANSAÇÕES\n" +
+        "==============================\n";
+
+    transacoes.forEach(t => {
+
+        const valor = Number(t.valor);
+
+        dados +=
+            t.data + " | " +
+            t.descricao + " | " +
+            (valor >= 0 ? "+" : "-") +
+            dinheiro(Math.abs(valor)) +
+            " | " +
+            t.categoria +
+            " | " +
+            (t.conta || "Principal") +
+            "\n";
+    });
+
+    if (
+        typeof Android !== "undefined" &&
+        typeof Android.exportarPDF === "function"
+    ) {
+
+        Android.exportarPDF(dados);
+
+        toast("Gerando PDF...");
+
+    } else {
+
+        toast(
+            "Exportação PDF nativa não está disponível."
+        );
+    }
+}
+
+
+/* =========================================================
+   CATEGORIAS
+========================================================= */
+
+function atualizarCategorias(){
+
+    const area =
+        document.getElementById(
+            "categoriasRelatorio"
+        );
+
+    const totais = {};
+
+    transacoes.forEach(function(t){
+
+        if(Number(t.valor) < 0){
+
+            const categoria =
+                t.categoria || "Outros";
+
+            totais[categoria] =
+                (totais[categoria] || 0) +
+                Math.abs(Number(t.valor));
+
+        }
+
+    });
+
+    const categorias =
+        Object.entries(totais)
+        .sort(function(a,b){
+            return b[1]-a[1];
+        });
+
+    if(!categorias.length){
+
+        area.innerHTML =
+            '<div class="empty">' +
+            'Ainda não existem despesas.' +
+            '</div>';
+
+        return;
+
+    }
+
+    const maior =
+        categorias[0][1];
+
+    area.innerHTML =
+        categorias.map(function(item){
+
+            const nome = item[0];
+            const valor = item[1];
+
+            const porcentagem =
+                (valor/maior)*100;
+
+            return `
+
+            <div class="item">
+
+                <div class="item-top">
+
+                    <h3>
+                        ${iconeCategoria(nome)}
+                        ${escapeHTML(nome)}
+                    </h3>
+
+                    <strong class="saida">
+                        ${dinheiro(valor)}
+                    </strong>
+
+                </div>
+
+                <div class="progress">
+
+                    <div
+                        class="progress-bar"
+                        style="width:${porcentagem}%"
+                    ></div>
+
+                </div>
+
+            </div>
+
+            `;
+
+        }).join("");
+
+}
+
+
+/* =========================================================
+   TEMA
+========================================================= */
+
+function alternarTema(){
+
+    document.body.classList.toggle("dark");
+
+    localStorage.setItem(
+        "tema",
+        document.body.classList.contains("dark")
+        ? "dark"
+        : "light"
+    );
+
+}
+
+
+function carregarTema(){
+
+    if(
+        localStorage.getItem("tema")
+        === "dark"
+    ){
+
+        document.body.classList.add("dark");
+
+    }
+
+}
+
+
+/* =========================================================
+   MODO SIMPLES
+========================================================= */
+
+function alternarModo(){
+
+    document.body.classList.toggle(
+        "simple-mode"
+    );
+
+    const simples =
+        document.body.classList.contains(
+            "simple-mode"
+        );
+
+    localStorage.setItem(
+        "modoSimples",
+        simples ? "1" : "0"
+    );
+
+    toast(
+        simples
+        ? "Modo simples ativado."
+        : "Modo completo ativado."
+    );
+
+}
+
+
+function carregarModo(){
+
+    if(
+        localStorage.getItem(
+            "modoSimples"
+        ) === "1"
+    ){
+
+        document.body.classList.add(
+            "simple-mode"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   NAVEGAÇÃO
+========================================================= */
+
+function abrirSecao(id,botao){
+
+    document
+        .querySelectorAll(".section")
+        .forEach(function(secao){
+
+            secao.classList.remove(
+                "active"
+            );
+
+        });
+
+    const secao =
+        document.getElementById(id);
+
+    if(secao)
+        secao.classList.add("active");
+
+    document
+        .querySelectorAll(".nav button")
+        .forEach(function(btn){
+
+            btn.classList.remove(
+                "active"
+            );
+
+        });
+
+    if(botao)
+        botao.classList.add("active");
+
+    if(id === "transacoes")
+        mostrarTransacoes();
+
+    if(id === "negocio"){
+
+        mostrarClientes();
+        mostrarProdutos();
+
+    }
+
+    if(id === "metas")
+        mostrarMetas();
+
+    if(id === "relatorios"){
+
+        atualizarCategorias();
+
+        atualizarOrcamento();
+
+        mostrarLembretes();
+
+        atualizarContas();
+
+    }
+
+}
+
+
+function abrirSecaoPorNome(id){
+
+    const botoes =
+        document.querySelectorAll(
+            ".nav button"
+        );
+
+    let botao = null;
+
+    botoes.forEach(function(b){
+
+        const texto =
+            b.textContent.toLowerCase();
+
+        if(
+            (id === "inicio" &&
+             texto.includes("início")) ||
+
+            (id === "transacoes" &&
+             texto.includes("movimentos")) ||
+
+            (id === "negocio" &&
+             texto.includes("negócio")) ||
+
+            (id === "metas" &&
+             texto.includes("metas")) ||
+
+            (id === "relatorios" &&
+             texto.includes("relatórios"))
+        ){
+
+            botao = b;
+
+        }
+
+    });
+
+    abrirSecao(id,botao);
+
+}
+
+
+/* =========================================================
+   LIMPAR TUDO
+========================================================= */
+
+function limparTudo() {
+
+    const confirmar = window.confirm(
+        "ATENÇÃO!\n\n" +
+        "Todos os dados serão apagados:\n" +
+        "• Transações\n" +
+        "• Metas\n" +
+        "• Contas\n" +
+        "• Lembretes\n" +
+        "• Orçamento\n\n" +
+        "Esta ação não pode ser desfeita.\n\n" +
+        "Deseja realmente continuar?"
+    );
+
+    if (!confirmar) {
+        return;
+    }
+
+    localStorage.removeItem("transacoes");
+    localStorage.removeItem("metas");
+    localStorage.removeItem("contas");
+    localStorage.removeItem("lembretes");
+    localStorage.removeItem("orcamento");
+
+    transacoes = [];
+
+    metas = [];
+
+    lembretes = [];
+
+    orcamento = 0;
+
+    contas = [
+        {
+            id: Date.now(),
+            nome: "Principal",
+            saldo: 0
+        }
+    ];
+
+    localStorage.setItem(
+        "contas",
+        JSON.stringify(contas)
+    );
+
+    atualizarTudo();
+
+    toast("🗑️ Todos os dados foram apagados.");
+}
+
+
+/* =========================================================
+   ATUALIZAÇÃO GERAL
+========================================================= */
+
+function atualizarTudo(){
+
+    atualizarDashboard();
+
+    atualizarUltimas();
+
+    atualizarGrafico();
+
+    mostrarTransacoes();
+
+    mostrarMetas();
+
+    mostrarLembretes();
+
+    atualizarContas();
+
+    mostrarClientes();
+
+    mostrarProdutos();
+
+    atualizarCategorias();
+
+    atualizarOrcamento();
+
+    salvar();
+
+}
+
+
+/* =========================================================
+   INICIALIZAÇÃO
+========================================================= */
+
+carregarTema();
+
+carregarModo();
+
+document.getElementById("data").value =
+    dataHoje();
+
+atualizarContas();
+
+atualizarTudo();
+
+</script></body>
+</html>
